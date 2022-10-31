@@ -2,7 +2,7 @@
 
 ## ERD
 
-<div style="width: 300px;">
+<div style="width: 8020px;">
   
   ![](erd.png)
   
