@@ -4,4 +4,5 @@ module.exports = (error, req, res, next) => {
     status: 'failed',
     message: 'internal server error',
   });
+  next()
 };

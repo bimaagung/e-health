@@ -6,9 +6,8 @@ const mockAuthRepo = (
     }
 ) => {
     const repo = {}
-    repo.register = jest.fn().mockReturnValue(
-        returnRegister !== true ? returnRegister : {
-           
+
+    const user = {
             username: "jhondoe",
             firstName : "Jhon",
             lastName: "Doe",
@@ -16,25 +15,15 @@ const mockAuthRepo = (
             phone: "081000123",
             image: "http://res.cloudinary.com/example",
             roleId: 2
-        }
+    }
+    repo.register = jest.fn().mockReturnValue(
+        returnRegister !== true ? returnRegister : user
     )
     repo.login = jest.fn().mockReturnValue(
-        returnLogin !== true ? returnLogin : {
-          
-            username: "jhondoe",
-            email: "jhondoe@mail.com",
-            image: "http://res.cloudinary.com/example",
-            roleId: 2
-        }
+        returnLogin !== true ? returnLogin : user
     )
     repo.loginGoogle = jest.fn().mockReturnValue(
-        returnLoginGoogle !== true ? returnLoginGoogle : {
-           
-            username: "jhondoe",
-            email: "jhondoe@mail.com",
-            image: "http://res.cloudinary.com/example",
-            roleId: 2
-        }
+        returnLoginGoogle !== true ? returnLoginGoogle :user
     )
     return repo
 
