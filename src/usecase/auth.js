@@ -1,4 +1,4 @@
-class Auth {
+class AuthUseCase {
   constructor(
     authRepository,
     userRepository,
@@ -39,7 +39,7 @@ class Auth {
     user = await this._authRepository.register(userData);
     let dataUser = this._.omit(user.dataValues, ['password']);
     result.isSuccess = true;
-    result.status = 200;
+    result.statusCode = 200;
     result.data = dataUser;
     return result;
   }
@@ -63,44 +63,11 @@ class Auth {
       return result;
     }
     let dataUser = this._.omit(user.dataValues, ['password']);
-    let token = this.generateToken(dataUser);
+    let token = this._func.generateAccessToken(dataUser);
     result.isSuccess = true;
     result.status = 200;
     result.data = dataUser;
     result.token = token;
     return result;
   }
-  async loginGoogle(idToken) {
-    let result = {
-      isSuccess: false,
-      reason: null,
-      status: 404,
-      data: null,
-      token: null,
-    };
-
-    let data = await this.googleOauth(idToken);
-    let user = await this.AuthRepository.loginWithGoogle(data.email);
-
-    if (user == null) {
-      const userData = {
-        name: data.name,
-        username: data.given_name + this.func.generateRandomNumber(3),
-        image: this.defaultImage.DEFAULT_AVATAR,
-        email: data.email,
-        is_admin: false,
-      };
-      user = await this.AuthRepository.registerUser(userData);
-    }
-    let dataUser = this._.omit(user.dataValues, ['password']);
-    let token = this.generateToken(dataUser);
-
-    result.isSuccess = true;
-    result.status = 200;
-    result.data = user;
-    result.data = dataUser;
-    result.token = token;
-    return result;
- }
-}
-module.exports = Auth;
+module.exports = AuthUseCase;
