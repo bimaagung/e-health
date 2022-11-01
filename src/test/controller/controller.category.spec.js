@@ -2,7 +2,8 @@ const categoryController = require('../../controller/category');
 const resData = require('../../helper/response');
 
 let mockCategoryUC = {
-    addCategory: jest.fn().mockReturnValue(null)
+    addCategory: jest.fn().mockReturnValue(null),
+    getListCategory: jest.fn().mockReturnValue(null)
 }
 
 const mockRequest = (body={}, query={}, params={}, file={}, user={}, useCases={}) => {
@@ -85,5 +86,47 @@ describe('category controller test', () => {
             expect(serverError().status).toEqual(500);
             expect(serverError().json.message).toEqual('internal server error');
          });
-     })
+    })
+    describe('getListCategory', () => { 
+
+        const categoryResult = [
+            {
+                id:1,
+                name: 'flu dan batuk',
+                url: 'http://cloudinary.com/image',
+                createdAt: '2022-09-07 09:36:06.000 +0700',
+                updatedAt: '2022-09-07 09:36:08.000 +0700'
+            }
+        ]
+        
+        test('should status = 200 and data is true', async () => { 
+            mockCategoryUC.getListCategory = jest.fn().mockReturnValue({
+                isSuccess: true, reason: null, data:categoryResult, statusCode:200
+            });
+
+            let req = mockRequest({}, {},{},{},{}, {categoryUC: mockCategoryUC})
+            let res = mockResponse();
+
+            await categoryController.getListCategory(req, res, next);
+                
+            expect(res.status).toBeCalledWith(200);
+            expect(res.json).toBeCalledWith(resData.success(categoryResult));
+         });
+         
+
+        test("should status = 500 and message = 'internal server error'", async () => { 
+            mockCategoryUC.getListCategory = jest.fn().mockImplementation(() => {
+                throw new Error();
+            });
+
+            let req = mockRequest({}, {},{},{},{}, {categoryUC: mockCategoryUC})
+            let res = mockResponse();
+            let serverError = next();
+
+            await categoryController.getListCategory(req, res, next);
+
+            expect(serverError().status).toEqual(500);
+            expect(serverError().json.message).toEqual('internal server error');
+         });
+    })
  })

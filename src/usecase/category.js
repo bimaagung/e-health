@@ -42,6 +42,23 @@ class CategoryUseCase {
 
     return result;
   }
+
+  async getListCategory() {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const categories = await this._categoryRepository.getListCategory();
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = categories;
+
+    return result;
+  }
 }
 
 module.exports = CategoryUseCase;

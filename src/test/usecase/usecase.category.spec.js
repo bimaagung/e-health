@@ -71,5 +71,18 @@ describe('category test', () => {
             expect(res.statusCode).toEqual(400);
             expect(res.reason).toEqual('category name already exists');
         });
-     })
- })
+     });
+
+    describe('getListCategory test', () => { 
+        test("should isSuccess = true, statusCode = 200, and type data is array", async () => {
+            let res = await categoryUC.getListCategory();
+
+            expect(res.isSuccess).toBeTruthy();
+            expect(res.statusCode).toEqual(200);
+            expect(Array.isArray(res.data)).toBeTruthy();
+            expect(res.data[0]).toHaveProperty('id');
+            expect(res.data[0]).toHaveProperty('name');
+            expect(res.data[0]).toHaveProperty('url');
+        });
+     });
+ });
