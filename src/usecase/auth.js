@@ -1,29 +1,29 @@
 class Auth {
   constructor(
-    AuthRepository,
-    UserRepository,
-    EmailRepository,
+    authRepository,
+    userRepository,
+    emailRepository,
     bcrypt,
-    generateAccessToken,
-    _,
+    func,
+    lodash,
   ) {
-    this.AuthRepository = AuthRepository;
-    this.UserRepository = UserRepository;
-    this.EmailRepository = EmailRepository;
-    this.bcrypt = bcrypt;
-    this.generateToken = generateAccessToken;
-    this._ = _;
+    this._authRepository = authRepository;
+    this._userRepository = userRepository;
+    this._emailRepository = emailRepository;
+    this._bcrypt = bcrypt;
+    this._func = func;
+    this._ = lodash;
   }
 
   async register(userData) {
     let result = {
       isSuccess: false,
       reason: null,
-      status: 404,
+      statusCode: 404,
       data: null,
       token: null,
     };
-    let user = await this.UserRepository.getUserByUsernameAndEmail(
+    let user = await this._userRepository.getUserByUsernameAndEmail(
       userData.username,
       userData.email,
     );
@@ -35,20 +35,9 @@ class Auth {
       result.reason = 'username or email not aviable';
       return result;
     }
-    userData.password = this.bcrypt.hashSync(userData.password, 10);
-    user = await this.AuthRepository.registerUser(userData);
+    userData.password = this._bcrypt.hashSync(userData.password, 10);
+    user = await this._authRepository.register(userData);
     let dataUser = this._.omit(user.dataValues, ['password']);
-
-    let users = await this.UserRepository.getAllUser();
-    let admin = this._.map(users, 'dataValues')[0];
-    await this.EmailRepository.sendNotificationRegisterForAdmin(
-      admin.email,
-      userData,
-    );
-    await this.EmailRepository.sendNotificationRegisterForUser(
-      userData.email,
-      userData,
-    );
     result.isSuccess = true;
     result.status = 200;
     result.data = dataUser;
@@ -89,8 +78,10 @@ class Auth {
       data: null,
       token: null,
     };
+
     let data = await this.googleOauth(idToken);
     let user = await this.AuthRepository.loginWithGoogle(data.email);
+
     if (user == null) {
       const userData = {
         name: data.name,
@@ -110,6 +101,6 @@ class Auth {
     result.data = dataUser;
     result.token = token;
     return result;
-  }
+ }
 }
 module.exports = Auth;

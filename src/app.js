@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const _ = require('lodash');
+const bcrypt = require('bcrypt');
 const func = require('./libs/function');
 const mediaHandler = require('./lib/mediaHandler');
 const serverError = require('./middleware/serverError');
@@ -27,7 +28,7 @@ const authUC = new AuthUseCase(
   new AuthRepository(),
   new UserRepository(),
   new EmailRepository(),
-  new OtpRepository(), 
+  bcrypt,
   func,
   _,
 );
