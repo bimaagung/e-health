@@ -19,4 +19,14 @@ module.exports = {
       next(error);
     }
   },
+
+  getListCategory: async (req, res, next) => {
+    try {
+      const result = await req.categoryUC.getListCategory();
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
 };

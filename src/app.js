@@ -15,6 +15,7 @@ const CategoryRepository = require('./repository/category');
 
 // Router
 const adminRouter = require('./routes/admin');
+const categoryRouter = require('./routes/category');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/admin', adminRouter);
+app.use('/api/category', categoryRouter);
 
 app.use(serverError);
 
