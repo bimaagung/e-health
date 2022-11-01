@@ -27,8 +27,8 @@ class CategoryUseCase {
       return result;
     }
 
-    if (category.filePath !== '') {
-      const urlImage = await this._mediaHanlder.cloudinaryUpload(category.filePath, 'category');
+    if (category.file !== undefined) {
+      const urlImage = await this._mediaHanlder.cloudinaryUpload(category.file.path, 'category');
       categoryValues.url = urlImage;
     } else {
       categoryValues.url = process.env.DEFAULT_IMAGE_CATEGORY;
