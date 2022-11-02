@@ -22,6 +22,7 @@ const EmailRepository = require('./repository/email');
 const CategoryRepository = require('./repository/category');
 
 // Router
+const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 
 const authUC = new AuthUseCase(
@@ -49,8 +50,8 @@ app.get('/', (req, res) => {
   res.send('Welcome E-Health');
 });
 
+app.use('/api', authRouter);
 app.use('/api/admin', adminRouter);
-
 app.use(serverError);
 
 module.exports = app;

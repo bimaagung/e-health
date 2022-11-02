@@ -53,21 +53,22 @@ class AuthUseCase {
       token: null,
     };
 
-    let user = await this.AuthRepository.loginUser(username);
+    let user = await this._authRepository.login(username);
     if (user == null) {
       result.reason = 'incorect email or password';
       return result;
     }
-    if (!this.bcrypt.compareSync(password, user.password)) {
+    if (!this._bcrypt.compareSync(password, user.password)) {
       result.reason = 'incorect email or password';
       return result;
     }
     let dataUser = this._.omit(user.dataValues, ['password']);
     let token = this._func.generateAccessToken(dataUser);
     result.isSuccess = true;
-    result.status = 200;
+    result.statusCode = 200;
     result.data = dataUser;
     result.token = token;
     return result;
   }
+}
 module.exports = AuthUseCase;
