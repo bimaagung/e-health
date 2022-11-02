@@ -40,6 +40,7 @@ describe('category controller test', () => {
             id:1,
             name: 'flu dan batuk',
             url: 'http://cloudinary.com/image',
+            is_examination: false,
             createdAt: '2022-09-07 09:36:06.000 +0700',
             updatedAt: '2022-09-07 09:36:08.000 +0700'
         }
@@ -49,7 +50,7 @@ describe('category controller test', () => {
                 isSuccess: true, reason: null, data:categoryResult, statusCode:200
             });
 
-            let req = mockRequest({name:'flu dan batuk'}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
+            let req = mockRequest({name:'flu dan batuk', is_examination:false}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
             let res = mockResponse();
 
             await categoryController.addCategory(req, res, next);
@@ -63,7 +64,7 @@ describe('category controller test', () => {
                 isSuccess: false, reason: 'category name already exists', data:null, statusCode:400
             });
 
-            let req = mockRequest({name:'flu dan batuk'}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
+            let req = mockRequest({name:'flu dan batuk', is_examination:false}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
             let res = mockResponse();
 
             await categoryController.addCategory(req, res, next);
@@ -77,7 +78,7 @@ describe('category controller test', () => {
                 throw new Error();
             });
 
-            let req = mockRequest({name:'flu dan batuk'}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
+            let req = mockRequest({name:'flu dan batuk', is_examination:false}, {},{},{path:'c/image.png'},{}, {categoryUC: mockCategoryUC})
             let res = mockResponse();
             let serverError = next();
 
@@ -94,6 +95,7 @@ describe('category controller test', () => {
                 id:1,
                 name: 'flu dan batuk',
                 url: 'http://cloudinary.com/image',
+                is_examination: false,
                 createdAt: '2022-09-07 09:36:06.000 +0700',
                 updatedAt: '2022-09-07 09:36:08.000 +0700'
             }

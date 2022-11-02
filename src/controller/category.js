@@ -6,6 +6,7 @@ module.exports = {
       const category = {
         name: req.body.name,
         file: req.file,
+        is_examination: req.body.is_examination,
       };
 
       const result = await req.categoryUC.addCategory(category);
