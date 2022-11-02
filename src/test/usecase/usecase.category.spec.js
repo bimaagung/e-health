@@ -28,7 +28,7 @@ describe('category test', () => {
             categoryResult.getCategoryByName = null;
             categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult), mediaHandler);
 
-            let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/'});
+            let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/', is_examination: false});
 
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(200);
@@ -52,7 +52,7 @@ describe('category test', () => {
 
             categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult), mediaHandler);
 
-            let res = await categoryUC.addCategory({name:'flu dan batuk', file:''});
+            let res = await categoryUC.addCategory({name:'flu dan batuk', file:'', is_examination: false});
 
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(200);
@@ -65,7 +65,7 @@ describe('category test', () => {
         });
 
         test("should isSuccess = false, statusCode = 400, and reason = 'category name already exists' ", async () => {
-             let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/'});
+             let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/', is_examination: false});
 
             expect(res.isSuccess).toBeFalsy();
             expect(res.statusCode).toEqual(400);

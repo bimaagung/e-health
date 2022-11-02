@@ -15,6 +15,7 @@ class CategoryUseCase {
     const categoryValues = {
       name: category.name.toUpperCase(),
       url: null,
+      is_examination: category.is_examination,
     };
 
     const categoryByName = await this._categoryRepository.getCategoryByName(categoryValues.name);
