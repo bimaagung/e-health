@@ -3,6 +3,7 @@ class AuthUseCase {
     authRepository,
     userRepository,
     emailRepository,
+    otpRepository,
     bcrypt,
     func,
     lodash,
@@ -10,6 +11,7 @@ class AuthUseCase {
     this._authRepository = authRepository;
     this._userRepository = userRepository;
     this._emailRepository = emailRepository;
+    this._otpRepository = otpRepository;
     this._bcrypt = bcrypt;
     this._func = func;
     this._ = lodash;
@@ -23,11 +25,22 @@ class AuthUseCase {
       data: null,
       token: null,
     };
+
+    let otp = await this._otpRepository.getOTP(
+      userData.email,
+      userData.otp_code,
+      "REGISTRATION"
+    );
+    if (otp === null) {
+      result.reason = "invalid otp code";
+      return result;
+    }
+
     let user = await this._userRepository.getUserByUsernameAndEmail(
       userData.username,
       userData.email,
     );
-    if (userData.password !== userData.confirmPassword) {
+    if (userData.password !== userData.confrimPassword) {
       result.reason = 'password and confrim password not match';
       return result;
     }
@@ -36,11 +49,18 @@ class AuthUseCase {
       return result;
     }
     userData.password = this._bcrypt.hashSync(userData.password, 10);
+    userData.avatar = null
+    userData.roleId = 2
     user = await this._authRepository.register(userData);
+
     let dataUser = this._.omit(user.dataValues, ['password']);
+    let token = this._func.generateAccessToken(dataUser);
+    await this._otpRepository.deleteAllOtp(userData.email);
+
     result.isSuccess = true;
-    result.statusCode = 200;
+    result.statusCode = 201;
     result.data = dataUser;
+    result.token = token
     return result;
   }
 

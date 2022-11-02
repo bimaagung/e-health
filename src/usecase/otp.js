@@ -28,7 +28,7 @@ class Otp {
 
         result.isSuccess = true;
         result.statusCode = 200,
-        result.reason = "check your email";
+            result.reason = "check your email";
         return result;
     }
     async verifyOTP(email, otp_code, otp_type) {

@@ -17,7 +17,7 @@ module.exports = {
         }
     },
     verifyOTP: async (req, res, next) => {
-      
+
         let otp_code = req.query.otp_code;
         let otp_type = req.query.otp_type;
         let email = req.query.email;

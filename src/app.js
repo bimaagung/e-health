@@ -32,6 +32,7 @@ const authUC = new AuthUseCase(
   new AuthRepository(),
   new UserRepository(),
   new EmailRepository(),
+  new OtpRepository(),
   bcrypt,
   func,
   _,
