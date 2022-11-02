@@ -44,7 +44,7 @@ class CategoryUseCase {
     return result;
   }
 
-  async getListCategory() {
+  async getListCategory(isExamination) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -52,7 +52,16 @@ class CategoryUseCase {
       data: null,
     };
 
-    const categories = await this._categoryRepository.getListCategory();
+    let filter = {};
+    if (isExamination !== undefined) {
+      filter = {
+        where: {
+          is_examination: isExamination,
+        },
+      };
+    }
+
+    const categories = await this._categoryRepository.getListCategory(filter);
 
     result.isSuccess = true;
     result.statusCode = 200;

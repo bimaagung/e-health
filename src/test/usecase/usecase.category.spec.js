@@ -52,7 +52,7 @@ describe('category test', () => {
 
             categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult), mediaHandler);
 
-            let res = await categoryUC.addCategory({name:'flu dan batuk', file:'', is_examination: false});
+            let res = await categoryUC.addCategory({name:'flu dan batuk', file:undefined, is_examination: false});
 
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(200);
@@ -83,6 +83,19 @@ describe('category test', () => {
             expect(res.data[0]).toHaveProperty('id');
             expect(res.data[0]).toHaveProperty('name');
             expect(res.data[0]).toHaveProperty('url');
+            expect(res.data[0]).toHaveProperty('is_examination');
+        });
+
+        test("when add query is_examination should isSuccess = true, statusCode = 200, and type data is array", async () => {
+            let res = await categoryUC.getListCategory({is_examination: false});
+
+            expect(res.isSuccess).toBeTruthy();
+            expect(res.statusCode).toEqual(200);
+            expect(Array.isArray(res.data)).toBeTruthy();
+            expect(res.data[0]).toHaveProperty('id');
+            expect(res.data[0]).toHaveProperty('name');
+            expect(res.data[0]).toHaveProperty('url');
+            expect(res.data[0]).toHaveProperty('is_examination');
         });
      });
  });
