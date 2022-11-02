@@ -114,6 +114,20 @@ describe('category controller test', () => {
             expect(res.status).toBeCalledWith(200);
             expect(res.json).toBeCalledWith(resData.success(categoryResult));
          });
+
+         test('when add query is_examination should status = 200 and data is true', async () => { 
+            mockCategoryUC.getListCategory = jest.fn().mockReturnValue({
+                isSuccess: true, reason: null, data:categoryResult, statusCode:200
+            });
+
+            let req = mockRequest({}, {},{is_examination:false},{},{}, {categoryUC: mockCategoryUC})
+            let res = mockResponse();
+
+            await categoryController.getListCategory(req, res, next);
+                
+            expect(res.status).toBeCalledWith(200);
+            expect(res.json).toBeCalledWith(resData.success(categoryResult));
+         });
          
 
         test("should status = 500 and message = 'internal server error'", async () => { 

@@ -23,7 +23,9 @@ module.exports = {
 
   getListCategory: async (req, res, next) => {
     try {
-      const result = await req.categoryUC.getListCategory();
+      const { is_examination: isExamination } = req.query;
+
+      const result = await req.categoryUC.getListCategory(isExamination);
 
       return res.status(result.statusCode).json(resData.success(result.data));
     } catch (error) {
