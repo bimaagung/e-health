@@ -1,6 +1,7 @@
 require('dotenv').config();
 const CategoryUseCase = require('../../usecase/category');
-const mockCategoryRepo = require('../mock/repository.category.mock');
+// const mockCategoryRepo = require('../mock/repository.category.mock');
+const mockCategory = require('../mock/category.mock')
 
 let categoryResult = {};
 let categoryUC = null;
@@ -12,21 +13,21 @@ let mediaHandler = {
 describe('category test', () => { 
     beforeEach(() => {
         categoryResult = {
-            getListCategory: true,
-            getCategoryById: true,
-            addCategory: true,
-            updateCategory: true,
-            deleteCategory: true,
-            getCategoryByName: true
+            getListCategory: jest.fn().mockReturnValue([mockCategory.category]),
+            getCategoryById: jest.fn().mockReturnValue(mockCategory.category),
+            addCategory: jest.fn().mockReturnValue(mockCategory.category),
+            updateCategory: jest.fn().mockReturnValue(true),
+            deleteCategory: jest.fn().mockReturnValue(true),
+            getCategoryByName: jest.fn().mockReturnValue(mockCategory.category)
         }
 
-        categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult, mediaHandler));
+        categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
     });
 
     describe('addCategory test', () => { 
         test("should isSuccess = true, statusCode = 200, and data is true", async () => {
-            categoryResult.getCategoryByName = null;
-            categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult), mediaHandler);
+            categoryResult.getCategoryByName = jest.fn().mockReturnValue(null);
+            categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
 
             let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/', is_examination: false});
 
@@ -47,10 +48,10 @@ describe('category test', () => {
                 updatedAt: '2022-09-07 09:36:08.000 +0700'
             }
 
-            categoryResult.getCategoryByName = null;
-            categoryResult.addCategory = category;
+            categoryResult.getCategoryByName =  jest.fn().mockReturnValue(null);;
+            categoryResult.addCategory =  jest.fn().mockReturnValue(category);
 
-            categoryUC = new CategoryUseCase(mockCategoryRepo(categoryResult), mediaHandler);
+            categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
 
             let res = await categoryUC.addCategory({name:'flu dan batuk', file:undefined, is_examination: false});
 
