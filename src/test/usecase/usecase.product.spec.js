@@ -3,7 +3,7 @@ const ProductUseCase = require('../../usecase/product');
 const mockProduct = require('../mock/product.mock');
 const mockCategory = require('../mock/category.mock');
 
-let productResult, categoryResult = {};
+let mockProductReturn, mockCategoryReturn = {};
 let productUC = null;
 
 let mediaHandler = {

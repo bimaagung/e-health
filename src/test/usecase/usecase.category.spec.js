@@ -3,7 +3,7 @@ const CategoryUseCase = require('../../usecase/category');
 // const mockCategoryRepo = require('../mock/repository.category.mock');
 const mockCategory = require('../mock/category.mock')
 
-let categoryResult = {};
+let mockCategoryResult = {};
 let categoryUC = null;
 
 let mediaHandler = {
@@ -12,7 +12,7 @@ let mediaHandler = {
 
 describe('category test', () => { 
     beforeEach(() => {
-        categoryResult = {
+        mockCategoryResult = {
             getListCategory: jest.fn().mockReturnValue([mockCategory.category]),
             getCategoryById: jest.fn().mockReturnValue(mockCategory.category),
             addCategory: jest.fn().mockReturnValue(mockCategory.category),
@@ -21,13 +21,13 @@ describe('category test', () => {
             getCategoryByName: jest.fn().mockReturnValue(mockCategory.category)
         }
 
-        categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
+        categoryUC = new CategoryUseCase(mockCategoryResult, mediaHandler);
     });
 
     describe('addCategory test', () => { 
         test("should isSuccess = true, statusCode = 200, and data is true", async () => {
-            categoryResult.getCategoryByName = jest.fn().mockReturnValue(null);
-            categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
+            mockCategoryResult.getCategoryByName = jest.fn().mockReturnValue(null);
+            categoryUC = new CategoryUseCase(mockCategoryResult, mediaHandler);
 
             let res = await categoryUC.addCategory({name:'flu dan batuk', file:'c:/images/', is_examination: false});
 
@@ -48,10 +48,10 @@ describe('category test', () => {
                 updatedAt: '2022-09-07 09:36:08.000 +0700'
             }
 
-            categoryResult.getCategoryByName =  jest.fn().mockReturnValue(null);;
-            categoryResult.addCategory =  jest.fn().mockReturnValue(category);
+            mockCategoryResult.getCategoryByName =  jest.fn().mockReturnValue(null);;
+            mockCategoryResult.addCategory =  jest.fn().mockReturnValue(category);
 
-            categoryUC = new CategoryUseCase(categoryResult, mediaHandler);
+            categoryUC = new CategoryUseCase(mockCategoryResult, mediaHandler);
 
             let res = await categoryUC.addCategory({name:'flu dan batuk', file:undefined, is_examination: false});
 
