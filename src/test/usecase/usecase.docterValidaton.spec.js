@@ -22,9 +22,9 @@ describe('docterValidation test', () => {
     describe('add docter Validation test', () => { 
         test("should isSuccess = true, statusCode = 201, and data is true", async () => {
             mockDocterValidationResult.getDocterValdationByUserId  = jest.fn().mockReturnValue(null);
-            docterValidationUC = new DocterValidationUseCase(mockDocterValidation, mediaHandler);
+            docterValidationUC = new DocterValidationUseCase( mockDocterValidationResult, mediaHandler);
 
-            let res = await docterValidationUC.addValidationDocter({docterId:5, file:'c:/images/'});
+            let res = await docterValidationUC.addDocterValidation();
 
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(200);

@@ -9,15 +9,20 @@ const app = express();
 
 // User Case
 const CategoryUseCase = require('./usecase/category');
+const DocterValidationUseCase = require('./usecase/dockerValidation');
 
 // Repository
 const CategoryRepository = require('./repository/category');
+const UserRepository = require('./repository/user');
+const DocterValidationRepository = require('./repository/docterValidation');
 
 // Router
 const adminRouter = require('./routes/admin');
 const categoryRouter = require('./routes/category');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
+const dockterValidationUC = new DocterValidationUseCase(
+  new DocterValidationRepository(), new UserRepository(), mediaHandler);
 
 app.use(cors());
 app.use(express.json());
@@ -25,6 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   req.categoryUC = categoryUC;
+  req.docterValidationUC = dockterValidationUC;
 
   next();
 });
