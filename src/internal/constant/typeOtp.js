@@ -1,0 +1,1 @@
+module.exports = ['REGISTRATION', 'RESETPASSWORD', 'UPDATEEMAIL'];
