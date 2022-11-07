@@ -11,7 +11,7 @@ const typeOtp = require('./internal/constant/typeOtp');
 
 // User Case
 const CategoryUseCase = require('./usecase/category');
-const DocterValidationUseCase = require('./usecase/dockerValidation');
+const DocterValidationUseCase = require('./usecase/docterValidation');
 
 // Repository
 const CategoryRepository = require('./repository/category');
