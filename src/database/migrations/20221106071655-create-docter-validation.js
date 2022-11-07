@@ -14,6 +14,12 @@ module.exports = {
       docterId: {
         type: Sequelize.INTEGER
       },
+      adminId: {
+        type: Sequelize.INTEGER
+      },  
+      status: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

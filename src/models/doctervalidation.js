@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   DocterValidation.init({
     urlDoc: DataTypes.STRING,
-    docterId: DataTypes.INTEGER
+    docterId: DataTypes.INTEGER,
+    adminId: DataTypes.INTEGER,
+    status: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'DocterValidation',
