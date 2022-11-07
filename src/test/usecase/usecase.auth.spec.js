@@ -1,176 +1,78 @@
-const AuthUseCase = require("../../usecase/auth");
-const mockAuthRepo = require("../mock/repository.auth.mock");
-const mockUserRepo = require("../mock/repository.user.mock");
-const mockOtpRepo = require("../mock/repository.otp.mock");
-const avatar = require("../../internal/constant/defaultImage");
-const func = require("../../libs/function");
-const _ = require("loadsh");
+const AuthUseCase = require('../../usecase/auth');
+const userMock = require('../mock/user.mock');
 
-let authValues,
-  userValues,
-  otpValues = {};
-let authUC = null;
+let mockUserReturn, bcrypt, token= {};
+let userUC = null;
 
-const bcrypt = {
-  hashSync: jest
-    .fn()
-    .mockReturnValue("sdjsdkjnfjfw&*23672(%^SHGHGSjhsjkh87623"),
-  compareSync: jest.fn().mockReturnValue(true),
-};
-
-const googleOauth = jest.fn().mockReturnValue({
-  name: "kian",
-  email: "kian@gmail.com",
-});
-
-const mediaHandler = {
-  cloudinaryUpload: jest
-    .fn()
-    .mockReturnValue("https://cloudinary.com/avatars/image.jpg"),
-};
-
-const generateToken = jest.fn()
-  .mockReturnValue(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-    eyJpZCI6MiwibmFtZSI6ImN1c3RvbWVyIiwidXNlcm5hbWUiOiJjdXN0b21lciIsImVtYWlsIjoiY3VzdG9tZX
-    JuQG1haWwuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpYXQiOjE2NjY1Njk0ODgsImV4cCI6MTY2NjU5MTA4OH0.
-    vtMW_4uev15R141j_MNIru9nbi1uLGu1swNtfm5-19M`);
-
-describe("auth", () => {
+describe('user test', () => {
   beforeEach(() => {
-    authValues = {
-      returnRegisterUser: true,
-      returnLoginUser: true,
-      returnLoginWithGoogle: true,
-    };
-    userValues = {
-      getUserByUsernameAndEmail: true,
-    };
-    otpValues = {
-      returnDeleteAllOtp: true,
-      returnGenerateOtp: true,
-      returnGetOtp: true,
-      returnGetOtpByEmail: true,
-    };
-    authUC = new AuthUseCase(
-      mockAuthRepo(authValues),
-      mockUserRepo(userValues),
-      mockOtpRepo(otpValues),
-      bcrypt,
-      mediaHandler,
-      generateToken,
-      _,
-      googleOauth,
-      func,
-      avatar
-    );
+    mockUserReturn = {
+      getUserByUsernameOrEmail: jest.fn().mockReturnValue(userMock.user),
+    }
+
+    bcrypt = {
+        compareSync: jest.fn().mockReturnValue('sdjsdkjnfjfw&*23672(%^SHGHGSjhsjkh87623')
+    }
+
+    tokenManager = {
+        generateToken: jest.fn().mockReturnValue(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+        eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
+        SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+    }
+
+
+    userUC = new AuthUseCase(mockUserReturn, bcrypt, tokenManager);
   });
-  describe("Test Register", () => {
-    test("should return true", async () => {
-      userValues.getUserByUsernameAndEmail = null;
-      authUC = new AuthUseCase(
-      mockAuthRepo(authValues),
-      mockUserRepo(userValues),
-      mockOtpRepo(otpValues),
-      bcrypt,
-      func,
-      _,
 
-      );
+  describe('login test', () => {
 
-      let res = await authUC.register({
-        username: "jhondoe",
-        firstName : "Jhon",
-        lastName: "Doe",
-        email: "jhondoe@mail.com",
-        phone: "081000123",
-        image: "http://res.cloudinary.com/example",
-        roleId: 2,
-        password: "12345678",
-        confrimPassword: "12345678",
-      });
+    user = {
+        'usernameOrEmail' : 'test',
+        'password': '12345678',
+    }
 
+    test("should isSuccess true , statusCode is 200 and data is valid", async () => {
+      userUC = new AuthUseCase(mockUserReturn, bcrypt, tokenManager);
+
+      const res = await userUC.login(user);
+
+      expect(mockUserReturn.getUserByUsernameOrEmail).toHaveBeenCalled();
+      expect(bcrypt.compareSync).toHaveBeenCalled();
+      expect(tokenManager.generateToken).toHaveBeenCalledWith({
+        id: 1,
+        username: 'test',
+        first_name: 'test',
+        last_name: 'unit',
+        email: 'test@example.com',
+    });
       expect(res.isSuccess).toBeTruthy();
+      expect(res.statusCode).toEqual(200);
+      expect(res).toHaveProperty('token');
+      expect(typeof res.token === 'string').toBeTruthy();
     });
 
-    test("should return fasle User already user", async () => {
-      let res = await authUC.register({
-        name: "kian",
-        username: "kian28",
-        avatar:
-          "http://res.cloudinary.com/dnvltueqb/image/upload/v1665839687/avatar/1665839685354_test_trwixd.jpg",
-        telp: "0823155511",
-        email: "kian@gmail.com",
-        roleId: 2,
-      });
+    test("when username/email not found should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
+        mockUserReturn.getUserByUsernameOrEmail = jest.fn().mockReturnValue(null),
+        userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
 
+        const res = await userUC.login(user);
+
+      expect(mockUserReturn.getUserByUsernameOrEmail).toHaveBeenCalled();
       expect(res.isSuccess).toBeFalsy();
-      expect(res.reason).toEqual("username or email not aviable");
+      expect(res.statusCode).toEqual(400);
+      expect(res.reason).toEqual('username and password incorrect');
     });
-    test("should return fasle confirm Password not match", async () => {
-      authValues.returnRegisterUser = null;
-      authUC = new AuthUseCase(
-        mockAuthRepo(authValues),
-        mockUserRepo(userValues),
-        mockOtpRepo(otpValues),
-        bcrypt,
-        mediaHandler,
-        generateToken,
-        _,
-        googleOauth,
-        func,
-        avatar
-      );
-      let res = await authUC.register({
-        password: "12345678",
-        confrimPassword: "123456789",
-      });
 
+    test("when password incorrect should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
+      bcrypt.compareSync = jest.fn().mockReturnValue(null);
+      userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
+
+      const res = await userUC.login(user);
+      
+      expect(bcrypt.compareSync).toHaveBeenCalled();
       expect(res.isSuccess).toBeFalsy();
-      expect(res.reason).toEqual("password and confrim password not match");
-      expect(res.data).toBeNull();
-    });
-
-    describe("Test Login", () => {
-      test("should return true success login", async () => {
-        authValues.returnLoginUser = {
-          dataValues: {
-            name: "test",
-            avatar: "url_image",
-            username: "testusername",
-            email: "test@email.com",
-          },
-        };
-        let res = await authUC.login({
-          username: "kian28",
-          password: "password",
-        });
-
-        expect(res.isSuccess).toBeTruthy();
-        expect(typeof res.data === "object").toBeTruthy();
-      });
-
-      test("should return false failed login", async () => {
-        bcrypt.compareSync = jest.fn().mockReturnValue(false);
-        authUC = new AuthUseCase(
-          mockAuthRepo(authValues),
-          mockUserRepo(userValues),
-          mockOtpRepo(otpValues),
-          bcrypt,
-          mediaHandler,
-          generateToken,
-          _,
-          googleOauth,
-          func,
-          avatar
-        );
-        let res = await authUC.login({
-          username: "kian28",
-          password: "password",
-        });
-
-        expect(res.isSuccess).toBeFalsy();
-        expect(res.reason).toEqual("incorect email or password");
-      });
+      expect(res.statusCode).toEqual(400);
+      expect(res.reason).toEqual('username and password incorrect');
     });
   });
 });

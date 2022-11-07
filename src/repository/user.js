@@ -1,37 +1,22 @@
-const { Op } = require("sequelize");
-const { User } = require("../models");
+const { Op } = require('sequelize');
+const { User } = require('../models');
 
 class UserRepository {
   constructor() {
-    this.UserModel = User;
+    this._userModel = User;
   }
-  async getUserByUsernameAndEmail(username, email) {
-    return await this.UserModel.findOne({
+
+  async getUserByUsernameOrEmail(usernameOrEmail) {
+    const result = await this._userModel.findOne({
       where: {
-        [Op.or]: [{ username }, { email }],
+        [Op.or]: [
+          { username: usernameOrEmail },
+          { email: usernameOrEmail },
+        ],
       },
     });
-  }
-  async getAllUser() {
-    return await this.UserModel.findAll({
-      attributes: { exclude: ["password"] },
-    });
-  }
-  async getUserById(id) {
-    return await this.UserModel.findOne({
-      where: { id },
-      attributes: { exclude: ["password"] },
-    });
-  }
-  async getUserByEmail(email) {
-    return await this.UserModel.findOne({
-      where: { email },
-    });
-  }
-  async getUserByUsername(username) {
-    return await this.UserModel.findOne({
-      where: { username },
-    });
+    return result;
   }
 }
+
 module.exports = UserRepository;

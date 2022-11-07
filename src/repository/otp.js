@@ -1,76 +1,48 @@
+const { Op } = require('sequelize');
 const { Otp } = require('../models');
-const func = require('../libs/function');
-const Op = require('sequelize').Op;
 
-class OtpRepository {
+class OTPRepository {
   constructor() {
-    this.OtpModel = Otp;
+    this._otpModel = Otp;
   }
 
-  async deleteAllOtp(email) {
-    await this.OtpModel.destroy({
-      where: { email },
-    });
-  }
-
-  async generateOTP(email, otp_type) {
-    await this.deleteAllOtp(email);
-    let otp_obj = {
-      email: email,
-      otp_type: otp_type,
-      otp_code: func.generateRandomNumber(6),
-    };
-    let minutesToAdd = 2;
-    let currentDate = new Date();
-    otp_obj.expired_at = new Date(currentDate.getTime() + minutesToAdd * 60000);
-
-    await this.OtpModel.create(otp_obj);
-
-    return otp_obj;
-  }
-
-  async getOTP(email, otp_code, otp_type) {
-    let otp = null;
-    otp = await this.OtpModel.findOne({
+  async verifyOTPByEmail(email) {
+    const result = await this._otpModel.findOne({
       where: {
-        email: {
-          [Op.eq]: email,
+        email,
+        expiredAt: {
+          [Op.gt]: new Date(),
         },
-        otp_code: {
-          [Op.eq]: otp_code,
-        },
-        otp_type: {
-          [Op.eq]: otp_type,
-        },
+      },
+    });
+
+    return result;
+  }
+
+  async verifyOTPByOTPCode(email, otpCode, otpType) {
+    const result = await this._otpModel.findOne({
+      where: {
+        email,
+        otpCode,
+        otpType,
         expired_at: {
           [Op.gt]: new Date(),
         },
       },
     });
-    if (otp === null) {
-      return null;
-    }
-    otp = otp.get();
-    return otp;
+
+    return result;
   }
-  async getOTPByEmail(email) {
-    let otp = null;
-    otp = await this.OtpModel.findOne({
-      where: {
-        email: {
-          [Op.eq]: email,
-        },
-        expired_at: {
-          [Op.gt]: new Date(),
-        },
-      },
-    });
-    if (otp === null) {
-      return null;
-    }
-    otp = otp.get();
-    return otp;
+
+  async addOTP(otpValue) {
+    const result = await this._otpModel.create(otpValue);
+    return result;
+  }
+
+  async deleteOTP(email) {
+    const result = await this._otpModel.destroy({ where: { email } });
+    return result;
   }
 }
 
-module.exports = OtpRepository;
+module.exports = OTPRepository;

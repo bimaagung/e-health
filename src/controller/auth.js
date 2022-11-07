@@ -3,36 +3,28 @@ const resData = require('../helper/response');
 module.exports = {
   login: async (req, res, next) => {
     try {
-      let { username, password } = req.body;
-      let resUser = await req.authUC.login(username, password);
-      if (resUser.isSuccess !== true) {
-        return res.status(resUser.statusCode).json(resData.failed(resUser.reason));
+      const user = {
+        usernameOrEmail: req.body.username_or_email,
+        password: req.body.password,
+      };
+
+      const responseObj = {
+        status: 'ok',
+        message: 'success',
+        token: null,
+      };
+
+      const result = await req.userUC.login(user);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
       }
-      res.status(resUser.statusCode).json(
-        resData.success({
-          user: resUser.data,
-          token: resUser.token,
-        })
-      );
-    } catch (e) {
-      next(e);
+
+      responseObj.token = result.token;
+
+      res.status(result.statusCode).json(responseObj);
+    } catch (error) {
+      next(error);
     }
   },
-  register: async (req, res, next) => {
-    try {
-      let userData = req.body;
-      let resUser = await req.authUC.register(userData);
-      if (resUser.isSuccess !== true) {
-        return res.status(resUser.statusCode).json(resData.failed(resUser.reason));
-      }
-      res.status(resUser.statusCode).json(
-        resData.success({
-          user: resUser.data,
-          token: resUser.token
-        })
-      );
-    } catch (e) {
-      next(e);
-    }
-  }
-}
+};

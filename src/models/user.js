@@ -17,11 +17,13 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
+<<<<<<< HEAD
     avatar : DataTypes.STRING,
+=======
+>>>>>>> 54d001b8777c34bfddab4ea79d33d81103daff13
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    roleId: DataTypes.INTEGER
+    phone: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',

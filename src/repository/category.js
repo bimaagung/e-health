@@ -10,8 +10,8 @@ class CategoryRepository {
     return result;
   }
 
-  async getListCategory() {
-    const result = await this._categoryModel.findAll();
+  async getListCategory(filter) {
+    const result = await this._categoryModel.findAll(filter);
     return result;
   }
 
