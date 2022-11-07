@@ -8,6 +8,7 @@ const serverError = require('./middleware/serverError');
 const app = express();
 
 const typeOtp = require('./internal/constant/typeOtp');
+const validationStatus = require('./internal/constant/docterValidation');
 
 // User Case
 const CategoryUseCase = require('./usecase/category');
@@ -25,7 +26,7 @@ const otpRouter = require('./routes/otp');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const dockterValidationUC = new DocterValidationUseCase(
-  new DocterValidationRepository(), new UserRepository(), mediaHandler);
+  new DocterValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 
 app.use(cors());
 app.use(express.json());
