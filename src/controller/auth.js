@@ -14,7 +14,7 @@ module.exports = {
         token: null,
       };
 
-      const result = await req.userUC.login(user);
+      const result = await req.authUC.login(user);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));
