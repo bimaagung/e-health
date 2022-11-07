@@ -7,6 +7,8 @@ const serverError = require('./middleware/serverError');
 
 const app = express();
 
+const typeOtp = require('./internal/constant/typeOtp');
+
 // User Case
 const CategoryUseCase = require('./usecase/category');
 const DocterValidationUseCase = require('./usecase/dockerValidation');
@@ -19,6 +21,7 @@ const DocterValidationRepository = require('./repository/docterValidation');
 // Router
 const adminRouter = require('./routes/admin');
 const categoryRouter = require('./routes/category');
+const otpRouter = require('./routes/otp');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const dockterValidationUC = new DocterValidationUseCase(
@@ -41,6 +44,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/admin', adminRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/otp', otpRouter);
 
 app.use(serverError);
 
