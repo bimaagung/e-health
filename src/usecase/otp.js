@@ -14,7 +14,7 @@ class OTPUseCase {
     };
 
     const otpValue = {
-      email,
+      email: email.toLowerCase(),
       otpCode: null,
       otpType: otpType.toUpperCase(),
       expiredAt: null,
