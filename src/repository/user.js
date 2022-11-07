@@ -17,6 +17,16 @@ class UserRepository {
     });
     return result;
   }
+
+  async addUser(user) {
+    const result = await this._userModel.create(user);
+    return result;
+  }
+
+  async verifyPhoneNumber(phone) {
+    const result = await this._userModel.findOne({ where: { phone } });
+    return result;
+  }
 }
 
 module.exports = UserRepository;
