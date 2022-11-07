@@ -1,6 +1,7 @@
 class UserUseCase {
-  constructor(userRepository, bcrypt, tokenManager) {
+  constructor(userRepository, otpRepository, bcrypt, tokenManager) {
     this._userRepository = userRepository;
+    this._otpRepository = otpRepository;
     this._bcrypt = bcrypt;
     this._tokenManager = tokenManager;
   }

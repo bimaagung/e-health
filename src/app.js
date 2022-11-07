@@ -31,7 +31,7 @@ const authRouter = require('./routes/auth');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
-const userUC = new AuthseCase(new UserRepository(), bcrypt, tokenManager);
+const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager);
 
 app.use(cors());
 app.use(express.json());
@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   req.categoryUC = categoryUC;
   req.otpUC = otpUC;
-  req.userUC = userUC;
+  req.authUC = authUC;
   next();
 });
 

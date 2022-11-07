@@ -2,7 +2,7 @@ const AuthUseCase = require('../../usecase/auth');
 const userMock = require('../mock/user.mock');
 const otpMock = require('../mock/otp.mock');
 
-let mockUserReturn, bcrypt, token= {};
+let mockUserReturn, mockOTPReturn,bcrypt, tokenManager= {};
 let userUC = null;
 
 describe('user test', () => {
@@ -60,8 +60,7 @@ describe('user test', () => {
 
     test("when username/email not found should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
         mockUserReturn.getUserByUsernameOrEmail = jest.fn().mockReturnValue(null),
-        userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
-
+        userUC = new AuthUseCase(mockUserReturn, mockOTPReturn,bcrypt, tokenManager);
         const res = await userUC.login(user);
 
       expect(mockUserReturn.getUserByUsernameOrEmail).toHaveBeenCalled();
@@ -72,7 +71,7 @@ describe('user test', () => {
 
     test("when password incorrect should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
       bcrypt.compareSync = jest.fn().mockReturnValue(null);
-      userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
+      userUC = new AuthUseCase(mockUserReturn, mockOTPReturn,bcrypt, tokenManager);
 
       const res = await userUC.login(user);
       
@@ -122,7 +121,7 @@ describe('user test', () => {
 
     test("when username/email not found should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
         mockUserReturn.getUserByUsernameOrEmail = jest.fn().mockReturnValue(null),
-        userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
+        userUC = new AuthUseCase(mockUserReturn, mockOTPReturn,bcrypt, tokenManager);
 
         const res = await userUC.register(user);
 
@@ -134,7 +133,7 @@ describe('user test', () => {
 
     test("when password incorrect should isSuccess is false, statusCode is 400 and reason is 'username and password incorrect'", async () => {
       bcrypt.compareSync = jest.fn().mockReturnValue(null);
-      userUC = new AuthUseCase(mockUserReturn, bcrypt, token);
+      userUC = new AuthUseCase(mockUserReturn, mockOTPReturn,bcrypt, tokenManager);
 
       const res = await userUC.register(user);
       
