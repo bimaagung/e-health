@@ -12,22 +12,27 @@ let mediaHandler = {
 describe('docterValidation test', () => {
     beforeEach(() => {
         mockDocterValidationResult = {
-            addValidationDocter: jest.fn().mockReturnValue(mockDocterValidation.docterValidation),
-            getDocterValdationByUserId: jest.fn().mockReturnValue(mockDocterValidation.docterValidation)
+            addDocterValidation: jest.fn().mockReturnValue(mockDocterValidation.docterValidation),
+            getDocterValdationByUserId : jest.fn().mockReturnValue(mockDocterValidation.docterValidation)
         }
 
         docterValidationUC = new DocterValidationUseCase(mockDocterValidationResult, mediaHandler);
     });
 
-    describe('add docter Validation test', () => {
+    describe('add docter Validation test', () => { 
+        const validation = {
+            userId: 1,
+            urlDoc: "c:/str.pdf"
+        }
+
         test("should isSuccess = true, statusCode = 201, and data is true", async () => {
             mockDocterValidationResult.getDocterValdationByUserId = jest.fn().mockReturnValue(null);
             docterValidationUC = new DocterValidationUseCase(mockDocterValidationResult, mediaHandler);
 
-            let res = await docterValidationUC.addDocterValidation();
+            let res = await docterValidationUC.addDocterValidation(validation);
 
             expect(res.isSuccess).toBeTruthy();
-            expect(res.statusCode).toEqual(200);
+            expect(res.statusCode).toEqual(201);
             expect(typeof res.data === 'object').toBeTruthy();
             expect(res.data).toHaveProperty('id');
             expect(res.data).toHaveProperty('docterId');
