@@ -10,6 +10,7 @@ const tokenManager = require('./helper/tokenManager');
 const app = express();
 
 const typeOtp = require('./internal/constant/typeOtp');
+const validationStatus = require('./internal/constant/docterValidation');
 
 // User Case
 const CategoryUseCase = require('./usecase/category');

@@ -48,6 +48,16 @@ class UserUseCase {
 
     return result;
   }
+
+  async register(user) {
+    // match password and confirm password
+    // check token code
+    // check username/email is existing
+    // default image
+    // hashSyncPassword
+    // get token
+    // add user
+  }
 }
 
 module.exports = UserUseCase;
