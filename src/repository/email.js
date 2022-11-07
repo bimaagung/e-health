@@ -1,5 +1,5 @@
 require('dotenv').config();
-const transport = require('../lib/nodemailer');
+const transport = require('../libs/nodemailer');
 const { User } = require('../models');
 
 class EmailRepository {

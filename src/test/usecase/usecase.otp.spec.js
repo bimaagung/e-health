@@ -43,18 +43,6 @@ describe('otp test', () => {
       expect(res.reason).toEqual('type otp not found');
     });
 
-    test("should isSuccess failed and reason is 'email not found'", async () => {
-      mockEmailReturn.verifyEmail = jest.fn().mockReturnValue(null)
-
-      OTPUC = new OTPUseCase(mockOTPReturn, mockEmailReturn, typeOtp);
-
-      const res = await OTPUC.generateOTP('test@example.com', 'REGISTRATION');
-
-      expect(res.isSuccess).toBeFalsy();
-      expect(res.statusCode).toEqual(404);
-      expect(res.reason).toEqual('email not found');
-    });
-
     test("should isSuccess failed and reason is 'waiting otp until recode'", async () => {
       const res = await OTPUC.generateOTP('test@example.com', 'REGISTRATION');
 

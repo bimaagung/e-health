@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const mediaHandler = require('./lib/mediaHandler');
+const mediaHandler = require('./libs/mediaHandler');
 const serverError = require('./middleware/serverError');
 const tokenManager = require('./helper/tokenManager');
 
@@ -31,7 +31,7 @@ const authRouter = require('./routes/auth');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
-const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager);
+const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 
 app.use(cors());
 app.use(express.json());
