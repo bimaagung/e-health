@@ -31,7 +31,7 @@ const authRouter = require('./routes/auth');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
-const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager);
+const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 
 app.use(cors());
 app.use(express.json());

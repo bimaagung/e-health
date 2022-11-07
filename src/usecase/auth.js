@@ -71,7 +71,7 @@ class UserUseCase {
     };
 
     user.username = user.username.toLowerCase();
-    user.email = user.username.toLowerCase();
+    user.email = user.email.toLowerCase();
 
     if (user.password !== user.confirmPassword) {
       result.reason = 'invalid password and confirm password';

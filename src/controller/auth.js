@@ -40,6 +40,7 @@ module.exports = {
         phone: req.body.phone,
         otp_code: req.body.otp_code,
         file: req.file,
+        roleId: 3,
       };
 
       const result = await req.authUC.register(user);

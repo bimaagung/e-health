@@ -29,15 +29,6 @@ class OTPUseCase {
       return result;
     }
 
-    const verifyEmail = await this._emailRepository.verifyEmail(email);
-
-    if (verifyEmail === null) {
-      result.isSuccess = false;
-      result.reason = 'email not found';
-      result.statusCode = 404;
-      return result;
-    }
-
     const otp = await this._otpRepository.verifyOTPByEmail(email);
 
     if (otp !== null) {
