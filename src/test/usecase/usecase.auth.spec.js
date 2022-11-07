@@ -123,7 +123,6 @@ describe('user test', () => {
         firstName: "test",
         lastName: "unit",
         username: "test",
-        phone: "086473674763",
         email: "test@example.com",
         avatar: "https://cloudinary.com/upload/image.png",
         roleId: 3
@@ -136,7 +135,6 @@ describe('user test', () => {
       expect(res.data.user).toHaveProperty('firstName');
       expect(res.data.user).toHaveProperty('lastName');
       expect(res.data.user).toHaveProperty('username');
-      expect(res.data.user).toHaveProperty('phone');
       expect(res.data.user).toHaveProperty('email');
       expect(res.data.user).toHaveProperty('avatar');
       expect(res.data.user).toHaveProperty('roleId');
@@ -159,7 +157,6 @@ describe('user test', () => {
       expect(res.data.user).toHaveProperty('firstName');
       expect(res.data.user).toHaveProperty('lastName');
       expect(res.data.user).toHaveProperty('username');
-      expect(res.data.user).toHaveProperty('phone');
       expect(res.data.user).toHaveProperty('email');
       expect(res.data.user).toHaveProperty('avatar');
       expect(res.data.user.avatar).toEqual(`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}`);

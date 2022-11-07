@@ -39,6 +39,7 @@ class UserUseCase {
       first_name: userResult.firstName,
       last_name: userResult.lastName,
       email: userResult.email,
+      roleId: userResult.roleId,
     };
 
     // getToken
@@ -119,6 +120,7 @@ class UserUseCase {
     const addUser = await this._userRepository.addUser(userObj);
 
     delete userObj.password;
+    delete userObj.phone;
 
     userObj = {
       id: addUser.id,
