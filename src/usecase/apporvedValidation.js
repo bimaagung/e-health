@@ -3,7 +3,7 @@ class ApprovedValidationUseCase {
     docterValidationRepository,
     userRepositoryRepository,
     validationStatus,
-    _,
+    _
   ) {
     this._docterValidationRepository = docterValidationRepository;
     this._userRepositoryRepository = userRepositoryRepository;
@@ -23,7 +23,7 @@ class ApprovedValidationUseCase {
       approve.docterId
     );
     if (verifyDocter === null) {
-      result.statusCode = 404; 
+      result.statusCode = 404;
       result.reason = "user not found!";
       return result;
     }
@@ -31,14 +31,24 @@ class ApprovedValidationUseCase {
       userValue,
       approve.docterId
     );
-    let getPendingValidationDocter = await this._docterValidationRepository.getDocterValdationByUserId(approve.docterId)
-     let pendingValidation =  this._.find(getPendingValidationDocter, ['status', 'PENDING']);
-     console.log(pendingValidation)
+    let getPendingValidationDocter =
+      await this._docterValidationRepository.getDocterValdationByUserId(
+        approve.docterId
+      );
+    let pendingValidation = this._.find(getPendingValidationDocter, [
+      "status",
+      "PENDING",
+    ]);
+    console.log(pendingValidation);
     const docterValidationValue = {
-      status : this._validationStatus.COMPLETED,
-      adminId : approve.AdminId
+      status: this._validationStatus.COMPLETED,
+      adminId: approve.AdminId,
     };
-    await this._docterValidationRepository.update
+    await this._docterValidationRepository.updateDocterValidation(
+      docterValidationValue,
+      pendingValidation.id
+    );
   }
 }
+
 module.exports = ApprovedValidationUseCase;
