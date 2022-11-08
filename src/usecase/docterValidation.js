@@ -36,18 +36,18 @@ class docterValidationUseCase {
     }
     validation.urlDoc = uploadDocument;
     validation.status = this._validationStatus.PENDING;
-    // check validation PENDING AND COMPLETED
     const validationExist = await this._docterValidation.getDocterValdationByUserId(validation.docterId);
     if (validationExist === null) {
       const createValidation = await this._docterValidation.addDocterValidation(
         validation,
-      );
-      result.isSuccess = true;
-      result.statusCode = 201;
-      result.data = createValidation;
-
-      return result;
-    }
+        );
+        result.isSuccess = true;
+        result.statusCode = 201;
+        result.data = createValidation;
+        
+        return result;
+      }
+      // check validation PENDING AND COMPLETED
     for (let i = 0; i < validationExist.length; i++) {
       if (validationExist[i].status === this._validationStatus.PENDING) {
         result.statusCode = 400;
@@ -60,6 +60,7 @@ class docterValidationUseCase {
         return result;
       }
     }
+    // create new Validation If status validation REJECT
     const createValidation = await this._docterValidation.addDocterValidation(
       validation,
     );
