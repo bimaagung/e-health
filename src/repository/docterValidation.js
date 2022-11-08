@@ -19,6 +19,11 @@ class DocterValidationRepository {
 
     return result;
   }
+
+  async updateDocterValidation(validation, id) {
+    const result = await this._docterValidation.update(validation, id);
+    return result;
+  }
 }
 
 module.exports = DocterValidationRepository;
