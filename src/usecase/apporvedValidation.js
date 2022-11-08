@@ -1,7 +1,12 @@
 class ApprovedValidationUseCase {
-  constructor(approvedValidationRepository, userRepositoryRepository) {
+  constructor(
+    approvedValidationRepository,
+    docterValidationRepository,
+    userRepositoryRepository,
+  ) {
     this._approvedValidationRepository = approvedValidationRepository;
-    this._userRepositoryValidationRepository = userRepositoryRepository;
+    this._docterValidationValidationRepository = docterValidationRepository;
+    this._userRepositoryRepository = userRepositoryRepository;
   }
   async approvedValidation(approve) {
     let result = {
@@ -10,11 +15,14 @@ class ApprovedValidationUseCase {
       reason: null,
       data: null,
     };
-    
-    const userApprove = {
-        roleId = 3,
-    }
-
+    const userValue = {
+      roleId: 3,
+    };
+    await this._userRepositoryRepository.updateUser(
+      userValue,
+      approve.docterId
+    );
+    return result;
   }
 }
 module.exports = ApprovedValidationUseCase;

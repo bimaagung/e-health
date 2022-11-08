@@ -9,10 +9,7 @@ class UserRepository {
   async getUserByUsernameOrEmail(usernameOrEmail) {
     const result = await this._userModel.findOne({
       where: {
-        [Op.or]: [
-          { username: usernameOrEmail },
-          { email: usernameOrEmail },
-        ],
+        [Op.or]: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
       },
     });
     return result;
@@ -25,6 +22,11 @@ class UserRepository {
 
   async verifyPhoneNumber(phone) {
     const result = await this._userModel.findOne({ where: { phone } });
+    return result;
+  }
+
+  async updateUser(update, id) {
+    const result = await this._userModel.update(update, { where: { id } });
     return result;
   }
 }
