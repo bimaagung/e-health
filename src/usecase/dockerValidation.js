@@ -5,7 +5,7 @@ class ValidationDocterUseCase {
     this._mediaHanlder = mediaHanlder;
   }
 
-  async addDocterValidation(validation) {
+  async addDocterValidation(validation, file) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -19,6 +19,13 @@ class ValidationDocterUseCase {
       result.reason = 'you have sent the doc, please check your email regularly for update';
       return result;
     }
+    if (file !== undefined) {
+      result.statusCode = 400;
+      result.reason = 'please insert file';
+      return result;
+    }
+    const urlDoc = await this._mediaHanlder.cloudinaryUpload(file.path);
+    validation.urlDoc = urlDoc
     const createValidation = await this._validationDocter.addDocterValidation(validation);
 
     result.isSuccess = true;
