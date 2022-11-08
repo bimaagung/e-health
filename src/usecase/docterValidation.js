@@ -19,11 +19,6 @@ class ValidationDocterUseCase {
       data: null,
     };
 
-    const validationValue = {
-      urlDoc: null,
-      status: this._validationStatus.PENDING,
-    };
-
     const validationExist = await this._validationDocter.getDocterValdationByUserId(validation.docterId);
     if (validationExist !== null) {
       result.statusCode = 400;
@@ -47,9 +42,10 @@ class ValidationDocterUseCase {
       return result;
     }
 
-    validationValue.urlDoc = uploadDocument;
+    validation.urlDoc = uploadDocument;
+    validation.status = this._validationStatus.PENDING;
     const createValidation = await this._validationDocter.addDocterValidation(
-      validationValue,
+      validation,
     );
 
     result.isSuccess = true;

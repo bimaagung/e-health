@@ -2,5 +2,4 @@ module.exports = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
   REJECT: 'REJECT',
-  NOT_REVIEWED: 'NOT REVIEWED',
 };
