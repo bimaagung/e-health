@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     urlDoc: DataTypes.STRING,
     docterId: DataTypes.INTEGER,
     adminId: DataTypes.INTEGER,
-    status: DataTypes.STRING
+    status: DataTypes.STRING, 
+    message: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'DocterValidation',

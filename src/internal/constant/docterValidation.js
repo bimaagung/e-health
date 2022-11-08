@@ -1,1 +1,5 @@
-module.exports = ['PENDING', 'REJECT', 'COMPLETE'];
+module.exports = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  REJECT: 'REJECT',
+};

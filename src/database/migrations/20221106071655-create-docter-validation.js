@@ -19,6 +19,9 @@ module.exports = {
       },  
       status: {
         type: Sequelize.STRING
+      }, 
+      message: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

@@ -1,11 +1,11 @@
 const resData = require('../helper/response');
 
 module.exports = {
-  addCategory: async (req, res, next) => {
+  addDocterValidation: async (req, res, next) => {
     try {
       const validation = {
         docterId: req.user.id,
-        urlDoc: req.file.path,
+        file: req.file,
         status: req.body.status,
         adminId: null,
       };
@@ -21,4 +21,4 @@ module.exports = {
       next(error);
     }
   },
-}
+};

@@ -19,13 +19,13 @@ class CategoryUseCase {
     };
 
     const categoryByName = await this._categoryRepository.getCategoryByName(
-      categoryValues.name
+      categoryValues.name,
     );
 
     if (categoryByName !== null) {
       result.isSuccess = false;
       result.statusCode = 400;
-      result.reason = "category name already exists";
+      result.reason = 'category name already exists';
 
       return result;
     }
@@ -33,7 +33,7 @@ class CategoryUseCase {
     if (category.file !== undefined) {
       const urlImage = await this._mediaHanlder.cloudinaryUpload(
         category.file.path,
-        "category"
+        'category',
       );
       categoryValues.url = urlImage;
     } else {
@@ -41,7 +41,7 @@ class CategoryUseCase {
     }
 
     const addCategory = await this._categoryRepository.addCategory(
-      categoryValues
+      categoryValues,
     );
 
     result.isSuccess = true;
@@ -91,7 +91,7 @@ class CategoryUseCase {
 
     const updateCategory = await this._categoryRepository.updateCategory(
       id,
-      categoryValues
+      categoryValues,
     );
 
     result.isSuccess = true;
