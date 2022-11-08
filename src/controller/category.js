@@ -1,4 +1,4 @@
-const resData = require("../helper/response");
+const resData = require('../helper/response');
 
 module.exports = {
   addCategory: async (req, res, next) => {
@@ -41,7 +41,7 @@ module.exports = {
       const checkCaregory = await req.categoryUC.getCategoryById(id);
 
       if (!checkCaregory) {
-        return res.status(404).json(resData.failed("Category not found"));
+        return res.status(404).json(resData.failed('Category not found'));
       }
 
       const newCategory = {

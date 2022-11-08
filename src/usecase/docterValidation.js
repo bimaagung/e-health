@@ -1,11 +1,17 @@
 class ValidationDocterUseCase {
-  constructor(ValidationDocterRepository, UserRepository, mediaHanlder) {
+  constructor(
+    ValidationDocterRepository,
+    UserRepository,
+    mediaHanlder,
+    validationStatus,
+  ) {
     this._validationDocter = ValidationDocterRepository;
     this._userRepository = UserRepository;
     this._mediaHanlder = mediaHanlder;
+    this._validationStatus = validationStatus;
   }
 
-  async addDocterValidation(validation, file) {
+  async addDocterValidation(validation) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -13,20 +19,38 @@ class ValidationDocterUseCase {
       data: null,
     };
 
-    const validationExist = await this._validationDocter.getDocterValdationByUserId(validation.userId);
+    const validationValue = {
+      urlDoc: null,
+      status: this._validationStatus.PENDING,
+    };
+
+    const validationExist = await this._validationDocter.getDocterValdationByUserId(validation.docterId);
     if (validationExist !== null) {
       result.statusCode = 400;
       result.reason = 'you have sent the doc, please check your email regularly for update';
       return result;
     }
-    if (file !== undefined) {
+
+    if (validation.file === undefined) {
       result.statusCode = 400;
-      result.reason = 'please insert file';
+      result.reason = 'please insert document';
       return result;
     }
-    const urlDoc = await this._mediaHanlder.cloudinaryUpload(file.path);
-    validation.urlDoc = urlDoc
-    const createValidation = await this._validationDocter.addDocterValidation(validation);
+    const uploadDocument = await this._mediaHanlder.cloudinaryUpload(
+      validation.file.path,
+      'urlDoc',
+    );
+    let verifyPdf = uploadDocument.split('.').reverse()[0];
+    if (verifyPdf !== 'pdf') {
+      result.statusCode = 400;
+      result.reason = 'can only upload pdf files';
+      return result;
+    }
+
+    validationValue.urlDoc = uploadDocument;
+    const createValidation = await this._validationDocter.addDocterValidation(
+      validationValue,
+    );
 
     result.isSuccess = true;
     result.statusCode = 201;
@@ -35,4 +59,5 @@ class ValidationDocterUseCase {
     return result;
   }
 }
+
 module.exports = ValidationDocterUseCase;
