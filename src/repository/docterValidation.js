@@ -11,7 +11,7 @@ class DocterValidationRepository {
   }
 
   async getDocterValdationByUserId(docterId) {
-    const result = await this._docterValidation.findOne(
+    const result = await this._docterValidation.findAll(
       {
         where: { docterId },
       },

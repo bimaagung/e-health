@@ -29,6 +29,11 @@ class UserRepository {
     const result = await this._userModel.update(update, { where: { id } });
     return result;
   }
+  
+  async getUserById(id) {
+    const result = await this._userModel.findOne({ where: { id } });
+    return result;
+  }
 }
 
 module.exports = UserRepository;
