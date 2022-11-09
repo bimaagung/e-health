@@ -1,5 +1,5 @@
 require('dotenv').config();
-const DocterValidationUseCase = require('../../usecase/docterValidation');
+const DocterValidationUseCase = require('../../usecase/doctorValidation');
 const mockDocterValidation = require('../mock/docterValidation.mock')
 
 let mockDocterValidationResult = {};

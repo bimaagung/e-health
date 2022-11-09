@@ -2,8 +2,8 @@ const express = require('express');
 const availableScheduleController = require('../controller/availableSchedule');
 
 const router = express.Router();
-const { authorized } = require('../middleware/authorization');
+const { authorized, doctor } = require('../middleware/authorization');
 
-router.post('/available/add', authorized, availableScheduleController.addAvailableSchedule);
+router.post('/available/add', authorized, doctor, availableScheduleController.addAvailableSchedule);
 
 module.exports = router;

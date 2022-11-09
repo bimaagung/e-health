@@ -3,7 +3,7 @@ const resData = require('../helper/response');
 module.exports = {
   getListPendingDocterValidation: async (req, res, next) => {
     try {
-      const result = await req.approvedValidationUC.getListPendingDocterValidation();
+      const result = await req.approvedValidationUC.getListPendingDoctorValidation();
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));

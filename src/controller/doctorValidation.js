@@ -1,16 +1,16 @@
 const resData = require('../helper/response');
 
 module.exports = {
-  addDocterValidation: async (req, res, next) => {
+  addDoctorValidation: async (req, res, next) => {
     try {
       const validation = {
-        docterId: req.user.id,
+        doctorId: req.user.id,
         file: req.file,
         status: req.body.status,
         adminId: null,
       };
 
-      const result = await req.docterValidationUC.addDocterValidation(validation);
+      const result = await req.doctorValidationUC.addDoctorValidation(validation);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));

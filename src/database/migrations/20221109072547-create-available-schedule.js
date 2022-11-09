@@ -14,7 +14,7 @@ module.exports = {
       time: {
         type: Sequelize.TIME
       },
-      docterValidationId: {
+      doctorValidationId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
