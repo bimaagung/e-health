@@ -35,6 +35,7 @@ const categoryRouter = require('./routes/category');
 const otpRouter = require('./routes/otp');
 const authRouter = require('./routes/auth');
 const docterValidationRouter = require('./routes/docterValidation');
+const availableScheduleRouter = require('./routes/availableSchedule');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
@@ -66,6 +67,7 @@ app.use('/api/category', categoryRouter);
 app.use('/api/otp', otpRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/docter', docterValidationRouter);
+app.use('/api/schedule', availableScheduleRouter);
 
 app.use(serverError);
 
