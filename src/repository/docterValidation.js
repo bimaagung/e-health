@@ -20,8 +20,20 @@ class DocterValidationRepository {
     return result;
   }
 
+  async getDocterValdationById(id) {
+    const result = await this._docterValidation.findOne(
+      {
+        where: { id },
+      },
+    );
+
+    return result;
+  }
+
   async updateDocterValidation(validation, id) {
-    const result = await this._docterValidation.update(validation, id);
+    const result = await this._docterValidation.update(validation, {
+      where: { id },
+    });
     return result;
   }
 }

@@ -3,8 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const _ = require('lodash');
 const mediaHandler = require('./libs/mediaHandler');
-const _ = require('loadsh')
 const serverError = require('./middleware/serverError');
 const tokenManager = require('./helper/tokenManager');
 
@@ -18,7 +18,7 @@ const CategoryUseCase = require('./usecase/category');
 const OTPUseCase = require('./usecase/otp');
 const AuthseCase = require('./usecase/auth');
 const DocterValidationUseCase = require('./usecase/docterValidation');
-const ApprovedValidationUseCase = require('./usecase/apporvedValidation')
+const ApprovedValidationUseCase = require('./usecase/apporvedValidation');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -38,7 +38,7 @@ const categoryUC = new CategoryUseCase(new CategoryRepository(), mediaHandler);
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const docterValidationUC = new DocterValidationUseCase(new DocterValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
-const approvedValidationUC = new ApprovedValidationUseCase(new DocterValidationRepository(), new UserRepository(), validationStatus, _)
+const approvedValidationUC = new ApprovedValidationUseCase(new DocterValidationRepository(), new UserRepository(), validationStatus, _);
 
 app.use(cors());
 app.use(express.json());
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   req.otpUC = otpUC;
   req.authUC = authUC;
   req.docterValidationUC = docterValidationUC;
-  req.approvedValidationUC = approvedValidationUC
+  req.approvedValidationUC = approvedValidationUC;
   next();
 });
 

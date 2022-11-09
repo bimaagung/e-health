@@ -9,15 +9,7 @@ const categoryValidator = require('../middleware/validator/category');
 
 router.post('/category/add', authorized, admin, mediahandler.uploadFile.single('image'), categoryValidator.validatorCategory, categoryController.addCategory);
 
-
-
 // approve validation
-router.put('/approve/validation/docter', authorized, admin, approveValidationController.approvedValidation);
-
-
-
-
-
-
+router.patch('/approve/validation/docter/:id', authorized, admin, approveValidationController.approvedValidation);
 
 module.exports = router;

@@ -3,14 +3,14 @@ class ApprovedValidationUseCase {
     docterValidationRepository,
     userRepositoryRepository,
     validationStatus,
-    _
+    _,
   ) {
     this._docterValidationRepository = docterValidationRepository;
     this._userRepositoryRepository = userRepositoryRepository;
     this._validationStatus = validationStatus;
     this._ = _;
   }
-  async approvedValidation(approve) {
+  async approvedValidation(approve, id) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -19,35 +19,35 @@ class ApprovedValidationUseCase {
     const userValue = {
       roleId: 3,
     };
-    const verifyDocter = await this._userRepositoryRepository.getUserById(
-      approve.docterId
-    );
-    if (verifyDocter === null) {
+
+    const docterValidation = await this._docterValidationRepository.getDocterValdationById(id);
+    if (docterValidation === null) {
       result.statusCode = 404;
-      result.reason = "user not found!";
+      result.reason = 'document not found';
       return result;
+    }
+    if (docterValidation.status === this._validationStatus.COMPLETED) {
+      result.statusCode = 400;
+      result.reason = 'Document status is complete'
+      return result
     }
     await this._userRepositoryRepository.updateUser(
       userValue,
-      approve.docterId
+      docterValidation.docterId
     );
-    let getPendingValidationDocter =
-      await this._docterValidationRepository.getDocterValdationByUserId(
-        approve.docterId
-      );
-    let pendingValidation = this._.find(getPendingValidationDocter, [
-      "status",
-      "PENDING",
-    ]);
-    console.log(pendingValidation);
     const docterValidationValue = {
       status: this._validationStatus.COMPLETED,
-      adminId: approve.AdminId,
+      adminId: approve.adminId,
+      message: 'your document has been approved',
     };
     await this._docterValidationRepository.updateDocterValidation(
       docterValidationValue,
-      pendingValidation.id
+      id,
     );
+
+    result.isSuccess = true
+    result.statusCode = 200
+    return result
   }
 }
 
