@@ -19,6 +19,7 @@ const OTPUseCase = require('./usecase/otp');
 const AuthseCase = require('./usecase/auth');
 const DocterValidationUseCase = require('./usecase/docterValidation');
 const ApprovedValidationUseCase = require('./usecase/apporvedValidation');
+const AvailableScheduleUseCase = require('./usecase/availableSchedule');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -26,6 +27,7 @@ const OTPRepository = require('./repository/otp');
 const EmailRepository = require('./repository/email');
 const UserRepository = require('./repository/user');
 const DocterValidationRepository = require('./repository/docterValidation');
+const AvailableScheduleRepository = require('./repository/availableSchedule');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -39,6 +41,7 @@ const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const docterValidationUC = new DocterValidationUseCase(new DocterValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DocterValidationRepository(), new UserRepository(), validationStatus, _);
+const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DocterValidationRepository());
 
 app.use(cors());
 app.use(express.json());
@@ -50,6 +53,7 @@ app.use((req, res, next) => {
   req.authUC = authUC;
   req.docterValidationUC = docterValidationUC;
   req.approvedValidationUC = approvedValidationUC;
+  req.availableScheduleUC = availableScheduleUC;
   next();
 });
 
