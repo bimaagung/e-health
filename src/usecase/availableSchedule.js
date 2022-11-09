@@ -19,6 +19,11 @@ class AviableDateUseCase {
       return result;
     }
     const completeDocterValidation = await this._.find(verifyDocterValidation, ['status', 'COMPLETED']);
+    if (completeDocterValidation === null || completeDocterValidation === undefined) {
+      result.statusCode = 400;
+      result.reason = 'cannot add schedule before document approved!';
+      return result;
+    }
     availableSchedule.docterValidationId = completeDocterValidation.id;
     const schedule = await this._availableSchedulRepository.addAvailableSchedule(availableSchedule);
     result.isSuccess = true;
