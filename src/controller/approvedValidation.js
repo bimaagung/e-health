@@ -9,7 +9,7 @@ module.exports = {
         return res.status(result.statusCode).json(resData.failed(result.reason));
       }
 
-      return res.status(result.statusCode).json(resData.success());
+      return res.status(result.statusCode).json(resData.success(result.data));
     } catch (error) {
       next(error);
     }
