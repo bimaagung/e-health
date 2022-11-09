@@ -1,16 +1,31 @@
 class ApprovedValidationUseCase {
   constructor(
-    approvedValidationRepository,
     docterValidationRepository,
     userRepositoryRepository,
     validationStatus,
+    _,
   ) {
-    this._approvedValidationRepository = approvedValidationRepository;
     this._docterValidationRepository = docterValidationRepository;
     this._userRepositoryRepository = userRepositoryRepository;
     this._validationStatus = validationStatus;
+    this._ = _;
   }
-  async approvedValidation(approve) {
+
+  async getListPendingDocterValidation() {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: [],
+    };
+    const pendingList = await this._docterValidationRepository.getListPendingDocterValidation();
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = pendingList;
+    return result;
+  }
+
+  async approvedValidation(approve, id) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -19,20 +34,65 @@ class ApprovedValidationUseCase {
     const userValue = {
       roleId: 3,
     };
-    const verifyDocter = await this._userRepositoryRepository.getUserById(approve.docterId)
-    if(verifyDocter === null) {
-      result.statusCode = 404,
-      result.reason = 'user not found!'
-      return result
+    const docterValidation = await this._docterValidationRepository.getDocterValdationById(id);
+    if (docterValidation === null) {
+      result.statusCode = 404;
+      result.reason = 'document not found';
+      return result;
+    }
+    if (docterValidation.status !== this._validationStatus.PENDING) {
+      result.statusCode = 400;
+      result.reason = 'Document status is not pending';
+      return result;
     }
     await this._userRepositoryRepository.updateUser(
       userValue,
-      approve.docterId
+      docterValidation.docterId,
     );
     const docterValidationValue = {
+      status: this._validationStatus.COMPLETED,
+      adminId: approve.adminId,
+      message: 'your document has been approved',
+    };
+    await this._docterValidationRepository.updateDocterValidation(
+      docterValidationValue,
+      id,
+    );
+    result.isSuccess = true;
+    result.statusCode = 200;
+    return result;
+  }
 
+  async rejectedValidation(reject, id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+    };
+    const docterValidation = await this._docterValidationRepository.getDocterValdationById(id);
+    if (docterValidation === null) {
+      result.statusCode = 404;
+      result.reason = 'document not found';
+      return result;
     }
-    
+    if (docterValidation.status !== this._validationStatus.PENDING) {
+      result.statusCode = 400;
+      result.reason = 'Document status is not pending';
+      return result;
+    }
+    const docterValidationValue = {
+      status: this._validationStatus.REJECT,
+      adminId: reject.adminId,
+      message: reject.message,
+    };
+    await this._docterValidationRepository.updateDocterValidation(
+      docterValidationValue,
+      id,
+    );
+    result.isSuccess = true;
+    result.statusCode = 200;
+    return result;
   }
 }
+
 module.exports = ApprovedValidationUseCase;
