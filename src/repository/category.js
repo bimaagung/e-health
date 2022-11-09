@@ -6,12 +6,12 @@ class CategoryRepository {
   }
 
   async addCategory(category) {
-    const result = await this._categoryModel.create(category);
+    const result = await this._categoryModel.create({ name: category });
     return result;
   }
 
-  async getListCategory(filter) {
-    const result = await this._categoryModel.findAll(filter);
+  async getListCategory() {
+    const result = await this._categoryModel.findAll();
     return result;
   }
 

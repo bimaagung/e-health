@@ -1,10 +1,9 @@
 class CategoryUseCase {
-  constructor(categoryRepository, mediaHanlder) {
+  constructor(categoryRepository) {
     this._categoryRepository = categoryRepository;
-    this._mediaHanlder = mediaHanlder;
   }
 
-  async addCategory(category) {
+  async addCategory(name) {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -12,14 +11,10 @@ class CategoryUseCase {
       data: null,
     };
 
-    const categoryValues = {
-      name: category.name.toUpperCase(),
-      url: null,
-      is_examination: category.is_examination,
-    };
+    const categoryUpperCase = name.toUpperCase();
 
     const categoryByName = await this._categoryRepository.getCategoryByName(
-      categoryValues.name,
+      categoryUpperCase,
     );
 
     if (categoryByName !== null) {
@@ -30,18 +25,8 @@ class CategoryUseCase {
       return result;
     }
 
-    if (category.file !== undefined) {
-      const urlImage = await this._mediaHanlder.cloudinaryUpload(
-        category.file.path,
-        'category',
-      );
-      categoryValues.url = urlImage;
-    } else {
-      categoryValues.url = process.env.DEFAULT_IMAGE_CATEGORY;
-    }
-
     const addCategory = await this._categoryRepository.addCategory(
-      categoryValues,
+      categoryUpperCase,
     );
 
     result.isSuccess = true;
@@ -51,7 +36,7 @@ class CategoryUseCase {
     return result;
   }
 
-  async getListCategory(isExamination) {
+  async getListCategory() {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -59,16 +44,7 @@ class CategoryUseCase {
       data: null,
     };
 
-    let filter = {};
-    if (isExamination !== undefined) {
-      filter = {
-        where: {
-          is_examination: isExamination,
-        },
-      };
-    }
-
-    const categories = await this._categoryRepository.getListCategory(filter);
+    const categories = await this._categoryRepository.getListCategory();
 
     result.isSuccess = true;
     result.statusCode = 200;
