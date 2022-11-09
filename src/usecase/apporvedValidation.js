@@ -32,7 +32,7 @@ class ApprovedValidationUseCase {
       reason: null,
     };
     const userValue = {
-      roleId: 3,
+      roleId: 2,
     };
     const docterValidation = await this._docterValidationRepository.getDocterValdationById(id);
     if (docterValidation === null) {

@@ -41,7 +41,7 @@ const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const docterValidationUC = new DocterValidationUseCase(new DocterValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DocterValidationRepository(), new UserRepository(), validationStatus, _);
-const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DocterValidationRepository());
+const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DocterValidationRepository(), _);
 
 app.use(cors());
 app.use(express.json());
