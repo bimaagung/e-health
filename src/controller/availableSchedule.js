@@ -23,5 +23,21 @@ module.exports = {
       next(error);
     }
   },
+  getAllAvailableScheduleByDoctorId: async (req, res, next) => {
+    try {
+      const { doctorId } = req.query;
+      const result = await req.availableScheduleUC.getAllAvailableScheduleByDoctorId(doctorId);
+
+      if (!result.isSuccess) {
+        return res
+          .status(result.statusCode)
+          .json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
 
 };
