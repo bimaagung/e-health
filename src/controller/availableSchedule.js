@@ -5,7 +5,7 @@ module.exports = {
     try {
       const schedule = {
         docterValidationId: req.body.docterValidationId,
-        dayName: req.body.dayName,
+        dayNameId: req.body.dayNameId,
         time: null,
       };
 
