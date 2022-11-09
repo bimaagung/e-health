@@ -11,6 +11,20 @@ class ApprovedValidationUseCase {
     this._ = _;
   }
 
+  async getListPendingDocterValidation() {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: [],
+    };
+    const pendingList = await this._docterValidationRepository.getListPendingDocterValidation();
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = pendingList;
+    return result;
+  }
+
   async approvedValidation(approve, id) {
     let result = {
       isSuccess: false,
@@ -69,6 +83,7 @@ class ApprovedValidationUseCase {
     const docterValidationValue = {
       status: this._validationStatus.REJECT,
       adminId: reject.adminId,
+      message: reject.message,
     };
     await this._docterValidationRepository.updateDocterValidation(
       docterValidationValue,

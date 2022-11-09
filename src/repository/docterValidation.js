@@ -1,4 +1,5 @@
 const { DocterValidation } = require('../models');
+const validationStatus = require('../internal/constant/docterValidation');
 
 class DocterValidationRepository {
   constructor() {
@@ -27,6 +28,13 @@ class DocterValidationRepository {
       },
     );
 
+    return result;
+  }
+
+  async getListPendingDocterValidation() {
+    const result = await this._docterValidation.findAll({
+      where: { status: validationStatus.PENDING },
+    });
     return result;
   }
 
