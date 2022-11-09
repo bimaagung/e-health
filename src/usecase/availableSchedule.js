@@ -5,14 +5,21 @@ class AviableDateUseCase {
     this._ = _;
   }
 
-  async getAllAvailableScheduleByDoctorId (addAvailableSchedule) {
+  async getAllAvailableScheduleByDoctorId(docterId) {
     let result = {
       isSuccess: false,
       statusCode: null,
       reason: null,
-      data: null,
+      data: [],
     };
-    // const scheduleList = await this._doctorValidationRepository.
+    const verifyDoctorValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(docterId);
+    const completeDoctorValidation = await this._.find(verifyDoctorValidation, ['status', 'COMPLETED']);
+
+    const scheduleList = await this._availableSchedulRepository.getAllAvailableScheduleByDoctorValidationId(completeDoctorValidation.id);
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = scheduleList;
+    return result;
   }
 
   async addAvailableSchedule(availableSchedule) {
