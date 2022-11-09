@@ -20,4 +20,24 @@ module.exports = {
       next(error);
     }
   },
+  rejectedValidation: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const reject = {
+        status: req.body.status,
+        adminId: req.user.id,
+        message: req.body.message,
+      };
+
+      const result = await req.approvedValidationUC.rejectedValidation(reject, id);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success());
+    } catch (error) {
+      next(error);
+    }
+  },
 };

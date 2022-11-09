@@ -11,5 +11,6 @@ router.post('/category/add', authorized, admin, mediahandler.uploadFile.single('
 
 // approve validation
 router.patch('/approve/validation/docter/:id', authorized, admin, approveValidationController.approvedValidation);
+router.patch('/reject/validation/docter/:id', authorized, admin, approveValidationController.rejectedValidation);
 
 module.exports = router;
