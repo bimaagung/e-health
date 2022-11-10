@@ -31,7 +31,7 @@ class DoctorValidationRepository {
     return result;
   }
 
-  async getListPendingDocterValidation() {
+  async getListPendingDoctorValidation() {
     const result = await this._doctorValidation.findAll({
       where: { status: validationStatus.PENDING },
     });
