@@ -1,20 +1,21 @@
 class CategoryUseCase {
-  constructor(categoryRepository, mediaHanlder) {
+  constructor(categoryRepository, productRepository) {
     this._categoryRepository = categoryRepository;
-    this._mediaHanlder = mediaHanlder;
+    this._productRepository = productRepository;
   }
 
-  async addCategory(category) {
-    
-
-    const categoryValues = {
-      name: category.name.toUpperCase(),
-      url: null,
-      is_examination: category.is_examination,
+  async addCategory(name) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
     };
 
+    const categoryUpperCase = name.toUpperCase();
+
     const categoryByName = await this._categoryRepository.getCategoryByName(
-      categoryValues.name,
+      categoryUpperCase,
     );
 
     if (categoryByName !== null) {
@@ -25,18 +26,8 @@ class CategoryUseCase {
       return result;
     }
 
-    if (category.file !== undefined) {
-      const urlImage = await this._mediaHanlder.cloudinaryUpload(
-        category.file.path,
-        'category',
-      );
-      categoryValues.url = urlImage;
-    } else {
-      categoryValues.url = process.env.DEFAULT_IMAGE_CATEGORY;
-    }
-
     const addCategory = await this._categoryRepository.addCategory(
-      categoryValues,
+      categoryUpperCase,
     );
 
     result.isSuccess = true;
@@ -46,7 +37,7 @@ class CategoryUseCase {
     return result;
   }
 
-  async getListCategory(isExamination) {
+  async getListCategory() {
     let result = {
       isSuccess: false,
       statusCode: null,
@@ -54,16 +45,7 @@ class CategoryUseCase {
       data: null,
     };
 
-    let filter = {};
-    if (isExamination !== undefined) {
-      filter = {
-        where: {
-          is_examination: isExamination,
-        },
-      };
-    }
-
-    const categories = await this._categoryRepository.getListCategory(filter);
+    const categories = await this._categoryRepository.getListCategory();
 
     result.isSuccess = true;
     result.statusCode = 200;
@@ -93,6 +75,65 @@ class CategoryUseCase {
     result.statusCode = 200;
     result.data = updateCategory;
 
+    return result;
+  }
+
+  async getCategoryById(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const filter = {
+      where: {
+        category_id: id,
+      },
+    };
+
+    const categoryById = await this._categoryRepository.getCategoryById(id);
+
+    if (categoryById === null) {
+      result.statusCode = 404;
+      result.reason = 'category not found';
+      return result;
+    }
+
+    const products = await this._productRepository.getListProduct(filter);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = {
+      id: categoryById.id,
+      name: categoryById.name,
+      createdAt: categoryById.createdAt,
+      updatedAt: categoryById.updatedAt,
+      products,
+    };
+
+    return result;
+  }
+
+  async deleteCategoryById(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+    };
+
+    const categoryById = await this._categoryRepository.getCategoryById(id);
+
+    if (categoryById === null) {
+      result.statusCode = 404;
+      result.reason = 'category not found';
+      return result;
+    }
+
+    await this._categoryRepository.deleteCategory(id);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
     return result;
   }
 }
