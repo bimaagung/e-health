@@ -1,10 +1,31 @@
 const express = require('express');
 const categoryController = require('../controller/category');
+const productController = require('../controller/product');
+const approveValidationController = require('../controller/approvedValidation');
+const medicalSpecialistController = require('../controller/medicalSpecialist');
 
 const router = express.Router();
-const mediahandler = require('../lib/mediaHandler');
+const { authorized, admin } = require('../middleware/authorization');
 const categoryValidator = require('../middleware/validator/category');
+const productValidator = require('../middleware/validator/product');
+const medicalSpecialistValidator = require('../middleware/validator/medicalSpecialist');
+const mediaHandler = require('../libs/mediaHandler');
 
-router.post('/category/add', mediahandler.uploadFile.single('image'), categoryValidator.validatorCategory, categoryController.addCategory);
+// category
+router.post('/category/add', authorized, admin, categoryValidator.validatorCategory, categoryController.addCategory);
+router.delete('/category/delete/:id', authorized, admin, categoryController.deleteCategoryById);
+
+// product
+router.post('/product/add', authorized, admin, mediaHandler.uploadFile.single('urlImage'), productValidator.validatorProduct, productController.addProduct);
+
+// approve validation
+router.get('/pending/validation/docter', authorized, admin, approveValidationController.getListPendingDocterValidation);
+router.patch('/approve/validation/:id', authorized, admin, approveValidationController.approvedValidation);
+router.patch('/reject/validation/:id', authorized, admin, approveValidationController.rejectedValidation);
+
+// medical Specialist
+router.post('/medical-specialist/add', authorized, admin, medicalSpecialistValidator.validatorMedicalSpecialist, medicalSpecialistController.addMedicalSpecialist);
+router.put('/medical-specialist/update/:id', authorized, admin, medicalSpecialistValidator.validatorMedicalSpecialist, medicalSpecialistController.updateMedicalSpecialist);
+router.delete('/medical-specialist/delete/:id', authorized, admin, medicalSpecialistController.deleteMedicalSpecialist);
 
 module.exports = router;

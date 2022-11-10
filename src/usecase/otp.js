@@ -14,7 +14,7 @@ class OTPUseCase {
     };
 
     const otpValue = {
-      email,
+      email: email.toLowerCase(),
       otpCode: null,
       otpType: otpType.toUpperCase(),
       expiredAt: null,
@@ -25,15 +25,6 @@ class OTPUseCase {
     if (validatorOTPType === undefined) {
       result.isSuccess = false;
       result.reason = 'type otp not found';
-      result.statusCode = 404;
-      return result;
-    }
-
-    const verifyEmail = await this._emailRepository.verifyEmail(email);
-
-    if (verifyEmail === null) {
-      result.isSuccess = false;
-      result.reason = 'email not found';
       result.statusCode = 404;
       return result;
     }

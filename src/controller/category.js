@@ -1,15 +1,11 @@
-const resData = require("../helper/response");
+const resData = require('../helper/response');
 
 module.exports = {
   addCategory: async (req, res, next) => {
     try {
-      const category = {
-        name: req.body.name,
-        file: req.file,
-        is_examination: req.body.is_examination,
-      };
+      const { name } = req.body;
 
-      const result = await req.categoryUC.addCategory(category);
+      const result = await req.categoryUC.addCategory(name);
 
       if (!result.isSuccess) {
         return res
@@ -25,15 +21,50 @@ module.exports = {
 
   getListCategory: async (req, res, next) => {
     try {
-      const { is_examination: isExamination } = req.query;
-
-      const result = await req.categoryUC.getListCategory(isExamination);
+      const result = await req.categoryUC.getListCategory();
 
       return res.status(result.statusCode).json(resData.success(result.data));
     } catch (error) {
       next(error);
     }
   },
+
+  getCategoryById: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const result = await req.categoryUC.getCategoryById(id);
+
+      if (!result.isSuccess) {
+        return res
+          .status(result.statusCode)
+          .json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  deleteCategoryById: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const result = await req.categoryUC.deleteCategoryById(id);
+
+      if (!result.isSuccess) {
+        return res
+          .status(result.statusCode)
+          .json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
+
   updateCategory: async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -41,7 +72,7 @@ module.exports = {
       const checkCaregory = await req.categoryUC.getCategoryById(id);
 
       if (!checkCaregory) {
-        return res.status(404).json(resData.failed("Category not found"));
+        return res.status(404).json(resData.failed('Category not found'));
       }
 
       const newCategory = {
@@ -61,4 +92,5 @@ module.exports = {
       next(error);
     }
   },
+
 };

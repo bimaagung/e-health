@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ApprovedValidation extends Model {
+  class Day extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  ApprovedValidation.init({
-    adminId: DataTypes.INTEGER
+  Day.init({
+    dayName: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'ApprovedValidation',
+    modelName: 'Day',
   });
-  return ApprovedValidation;
+  return Day;
 };

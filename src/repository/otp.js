@@ -25,7 +25,7 @@ class OTPRepository {
         email,
         otpCode,
         otpType,
-        expired_at: {
+        expiredAt: {
           [Op.gt]: new Date(),
         },
       },
