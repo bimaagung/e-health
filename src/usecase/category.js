@@ -88,7 +88,7 @@ class CategoryUseCase {
 
     const filter = {
       where: {
-        category_id: id,
+        categoryId: id,
       },
     };
 
