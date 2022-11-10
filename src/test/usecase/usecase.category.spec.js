@@ -1,8 +1,9 @@
 require("dotenv").config();
 const CategoryUseCase = require("../../usecase/category");
 const mockCategory = require("../mock/category.mock");
+const mockProduct = require("../mock/product.mock");
 
-let mockCategoryResult = {};
+let mockCategoryResult, mockProductResult = {};
 let categoryUC = null;
 
 describe("category test", () => {
@@ -16,7 +17,11 @@ describe("category test", () => {
       getCategoryByName: jest.fn().mockReturnValue(mockCategory.category),
     };
 
-    categoryUC = new CategoryUseCase(mockCategoryResult);
+    mockProductResult = {
+      getListProduct: jest.fn().mockReturnValue([mockProduct.product]),
+    }
+
+    categoryUC = new CategoryUseCase(mockCategoryResult, mockProductResult);
   });
 
   describe("addCategory test", () => {
@@ -61,6 +66,38 @@ describe("category test", () => {
       expect(Array.isArray(res.data)).toBeTruthy();
       expect(res.data[0]).toHaveProperty("id");
       expect(res.data[0]).toHaveProperty("name");
+    });
+  });
+
+  describe("getCategoryById test", () => {
+    test("should isSuccess = true, statusCode = 200, and type data is valid", async () => {
+      let res = await categoryUC.getCategoryById(1);
+
+      expect(mockCategoryResult.getCategoryById).toHaveBeenCalled();
+      //expect(mockProductResult.getListProduct).toHaveBeenCalled();
+      expect(res.isSuccess).toBeTruthy();
+      expect(res.statusCode).toEqual(200);
+      expect(typeof res.data === 'object').toBeTruthy();
+      expect(res.data).toHaveProperty("id");
+      expect(res.data).toHaveProperty("name");
+      expect(res.data).toHaveProperty("products");
+      expect(Array.isArray(res.data.products)).toBeTruthy()
+      expect(res.data.products[0]).toHaveProperty('id');
+      expect(res.data.products[0]).toHaveProperty('name');
+      expect(res.data.products[0]).toHaveProperty('price');
+      expect(res.data.products[0]).toHaveProperty('is_strip');
+      expect(res.data.products[0]).toHaveProperty('segementation');
+      expect(res.data.products[0]).toHaveProperty('url');
+    });
+
+    test("should isSuccess is true,  statusCode = 404, and message 'category not found'", async () => {
+      mockCategoryResult.getCategoryById = jest.fn().mockReturnValue(null)
+      categoryUC = new CategoryUseCase(mockCategoryResult, mockProductResult);
+      let res = await categoryUC.getCategoryById(1);
+
+      expect(res.isSuccess).toBeFalsy();
+      expect(res.statusCode).toEqual(404);
+      expect(res.reason).toEqual('category not found');
     });
   });
 });
