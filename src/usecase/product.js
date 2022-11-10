@@ -13,7 +13,9 @@ class ProductUseCase {
       data: null,
     };
 
-    const checkProductName = this._productRepository.getProductByName(product.name);
+    product.name = product.name.toUpperCase();
+
+    const checkProductName = await this._productRepository.getProductByName(product.name);
 
     if (checkProductName !== null) {
       result.isSuccess = false;
@@ -22,20 +24,17 @@ class ProductUseCase {
       return result;
     }
 
-    const verifyCategory = await this._categoryRepository.getCategoryById(product.category_id);
+    const verifyCategory = await this._categoryRepository.getCategoryById(product.categoryId);
 
     if (verifyCategory === null) {
-      product.category_id = process.env.DEFAULT_CATEGORY_ID;
+      const otherCategory = await this._categoryRepository.getCategoryByName('OTHER');
+      product.categoryId = otherCategory.id;
     }
 
-    if (file !== undefined) {
-      const urlImage = await this._mediaHanlder.cloudinaryUpload(file.path, 'product');
-      product.url = urlImage;
-    } else {
-      product.url = process.env.DEFAULT_IMAGE_CATEGORY;
-    }
+    const urlImage = await this._mediaHandler.cloudinaryUpload(file.path, 'product');
+    product.urlImage = urlImage;
 
-    const addProduct = this._productRepository.addProduct(product);
+    const addProduct = await this._productRepository.addProduct(product);
 
     result.isSuccess = true;
     result.statusCode = 200;

@@ -2,7 +2,11 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 
-const uploadFile = multer({ storage: multer.diskStorage({}), limits: { fileSize: 500000 } });
+const uploadFile = multer(
+  {
+    storage: multer.diskStorage({}),
+  },
+);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

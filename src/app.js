@@ -20,6 +20,7 @@ const AuthseCase = require('./usecase/auth');
 const DoctorValidationUseCase = require('./usecase/doctorValidation');
 const ApprovedValidationUseCase = require('./usecase/apporvedValidation');
 const AvailableScheduleUseCase = require('./usecase/availableSchedule');
+const ProductUseCase = require('./usecase/product');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -44,6 +45,7 @@ const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt,
 const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), _);
+const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
 
 app.use(cors());
 app.use(express.json());
@@ -56,6 +58,7 @@ app.use((req, res, next) => {
   req.doctorValidationUC = doctorValidationUC;
   req.approvedValidationUC = approvedValidationUC;
   req.availableScheduleUC = availableScheduleUC;
+  req.productUC = productUC;
   next();
 });
 
