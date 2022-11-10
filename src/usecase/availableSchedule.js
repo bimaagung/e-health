@@ -1,7 +1,8 @@
 class AviableDateUseCase {
-  constructor(availableSchedulRepository, doctorValidationRepository, _) {
+  constructor(availableSchedulRepository, doctorValidationRepository,dayRepository, _) {
     this._availableSchedulRepository = availableSchedulRepository;
     this._doctorValidationRepository = doctorValidationRepository;
+    this._dayRepository =dayRepository;
     this._ = _;
   }
 

@@ -1,42 +1,51 @@
-require('dotenv').config();
-const DoctorValidationUseCase = require('../../usecase/doctorValidation');
-const mockDoctorValidation = require('../mock/doctorValidation.mock')
+require("dotenv").config();
+const DoctorValidationUseCase = require('../../usecase/doctorValidation')
+const mockDoctorValidation = require('../mock/docterValidation.mock')
 
 let mockDoctorValidationResult = {};
-let doctorValidationUC = null;
+let doctoValidationUC = null;
 
 let mediaHandler = {
-    cloudinaryUpload: jest.fn().mockReturnValue('http://cloudinary.com/image')
-}
+    cloudinaryUpload: jest.fn().mockReturnValue("http://cloudinary.com/image"),
+  };
+  
 
-describe('doctorValidation test', () => {
-    beforeEach(() => {
+describe('doctor validaton test', ()=>{
+    beforeEach(()=>{
         mockDoctorValidationResult = {
-            addDoctorValidation: jest.fn().mockReturnValue(mockDoctorValidation.doctorValidation),
-            getDoctorValdationByUserId : jest.fn().mockReturnValue(mockDoctorValidation.doctorValidation)
+            getDoctorValdationByUserId: jest.fn().mockReturnValue(mockDoctorValidation.doctorValidation),
+            addDoctorValidation: jest.fn().mockReturnValue(mockDoctorValidation.doctorValidation)
         }
-
-        doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationResult, mediaHandler);
-    });
-
-    describe('add doctor Validation test', () => { 
+        doctoValidationUC = new DoctorValidationUseCase(mockDoctorValidationResult, mediaHandler) 
+    })
+    describe('add docter validation test', ()=>{
         const validation = {
-            userId: 1,
-            urlDoc: "c:/str.pdf"
+            doctorId: 1,
+            file: "c:/str.pdf",
+            status : null,
+            adminId : null,
         }
-
-        test("should isSuccess = true, statusCode = 201, and data is true", async () => {
+        test('should isSuccess = true, statusCode 201, and data is true',async () => { 
             mockDoctorValidationResult.getDoctorValdationByUserId = jest.fn().mockReturnValue(null);
-            doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationResult, mediaHandler);
+            doctoValidationUC = new DoctorValidationUseCase(mockDoctorValidationResult, mediaHandler);
 
-            let res = await doctorValidationUC.addDoctorValidation(validation);
-
-            expect(res.isSuccess).toBeTruthy();
+            let res = await doctoValidationUC.addDoctorValidation(validation)
+            expect(res.isSuccess).toEqual(true);
             expect(res.statusCode).toEqual(201);
             expect(typeof res.data === 'object').toBeTruthy();
             expect(res.data).toHaveProperty('id');
             expect(res.data).toHaveProperty('doctorId');
             expect(res.data).toHaveProperty('urlDoc');
-        });
-    });
-});
+         })
+         test('should isSuccess = false, statusCode 400, and data is null',async () => { 
+
+            let res = await doctoValidationUC.addDoctorValidation(validation)
+            expect(res.isSuccess).toEqual(false);
+            expect(res.statusCode).toEqual(400);
+            expect(typeof res.data === 'object').toBeTruthy();
+            expect(res.data).toHaveProperty('id');
+            expect(res.data).toHaveProperty('doctorId');
+            expect(res.data).toHaveProperty('urlDoc');
+         })
+    })
+})

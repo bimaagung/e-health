@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const _ = require('lodash');
+const _ = require('loadsh');
 const mediaHandler = require('./libs/mediaHandler');
 const serverError = require('./middleware/serverError');
 const tokenManager = require('./helper/tokenManager');
@@ -28,6 +28,7 @@ const EmailRepository = require('./repository/email');
 const UserRepository = require('./repository/user');
 const DoctorValidationRepository = require('./repository/doctorValidation');
 const AvailableScheduleRepository = require('./repository/availableSchedule');
+const DayRepository = require('./repository/day');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -42,7 +43,7 @@ const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
-const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), _);
+const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), new DayRepository(), _);
 
 app.use(cors());
 app.use(express.json());
