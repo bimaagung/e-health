@@ -68,6 +68,8 @@ class DoctorUseCase {
       medicalSpecialistId: medicalSpecialist.id,
       specialistName: medicalSpecialist.dataValues.specialistName,
       roleId: verifyDoctor.roleId,
+      createdAt: verifyDoctor.createdAt,
+      updatedAt: verifyDoctor.updatedAt,
       availableSchedule: schedule,
     };
 
