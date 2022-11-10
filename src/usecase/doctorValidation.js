@@ -1,30 +1,28 @@
 class doctorValidationUseCase {
   constructor(
     doctorValidationRepository,
-    userRepository,
     mediaHanlder,
     validationStatus,
   ) {
     this._doctorValidation = doctorValidationRepository;
-    this._userRepository = userRepository;
     this._mediaHanlder = mediaHanlder;
     this._validationStatus = validationStatus;
   }
 
-  async addDoctorValidation(validation) {
+  async addDoctorValidation(validation, file) {
     let result = {
       isSuccess: false,
       statusCode: null,
       reason: null,
       data: null,
     };
-    if (validation.file === undefined) {
+    if (file === undefined) {
       result.statusCode = 400;
       result.reason = 'please insert document';
       return result;
     }
     const uploadDocument = await this._mediaHanlder.cloudinaryUpload(
-      validation.file.path,
+      file.path,
       'urlDoc',
     );
     // check file pdf

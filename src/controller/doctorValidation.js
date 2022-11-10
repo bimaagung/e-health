@@ -6,12 +6,14 @@ module.exports = {
       const validation = {
         doctorId: req.user.id,
         medicalSpecialistId: req.body.medicalSpecialistId,
-        file: req.file,
+        urlDoc: null,
         status: req.body.status,
         adminId: null,
       };
 
-      const result = await req.doctorValidationUC.addDoctorValidation(validation);
+      const { file } = req;
+
+      const result = await req.doctorValidationUC.addDoctorValidation(validation, file);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));
