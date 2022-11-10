@@ -85,9 +85,9 @@ describe("category test", () => {
       expect(res.data.products[0]).toHaveProperty('id');
       expect(res.data.products[0]).toHaveProperty('name');
       expect(res.data.products[0]).toHaveProperty('price');
-      expect(res.data.products[0]).toHaveProperty('is_strip');
-      expect(res.data.products[0]).toHaveProperty('segementation');
-      expect(res.data.products[0]).toHaveProperty('url');
+      expect(res.data.products[0]).toHaveProperty('isStrip');
+      expect(res.data.products[0]).toHaveProperty('segmentation');
+      expect(res.data.products[0]).toHaveProperty('urlImage');
     });
 
     test("should isSuccess is true,  statusCode = 404, and message 'category not found'", async () => {

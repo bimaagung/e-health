@@ -20,6 +20,7 @@ const AuthseCase = require('./usecase/auth');
 const DoctorValidationUseCase = require('./usecase/doctorValidation');
 const ApprovedValidationUseCase = require('./usecase/apporvedValidation');
 const AvailableScheduleUseCase = require('./usecase/availableSchedule');
+const ProductUseCase = require('./usecase/product');
 const DoctorUseCase = require('./usecase/doctor');
 const MedicalSpecialistUseCase = require('./usecase/medicalSpecialist');
 
@@ -49,6 +50,7 @@ const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
+const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), new DayRepository(), _);
 const doctorUC = new DoctorUseCase(new AvailableScheduleRepository(), new UserRepository(), _);
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
@@ -64,6 +66,7 @@ app.use((req, res, next) => {
   req.doctorValidationUC = doctorValidationUC;
   req.approvedValidationUC = approvedValidationUC;
   req.availableScheduleUC = availableScheduleUC;
+  req.productUC = productUC;
   req.doctorUC = doctorUC;
   req.medicalSpecialistUC = medicalSpecialistUC;
   next();
