@@ -100,4 +100,25 @@ describe("category test", () => {
       expect(res.reason).toEqual('category not found');
     });
   });
+
+   describe("deleteCategory test", () => {
+    test("should isSuccess = true, statusCode = 200", async () => {
+      let res = await categoryUC.deleteCategoryById(1);
+
+      expect(mockCategoryResult.getCategoryById).toHaveBeenCalled();
+      expect(mockCategoryResult.deleteCategory).toHaveBeenCalled();
+      expect(res.isSuccess).toBeTruthy();
+      expect(res.statusCode).toEqual(200);
+    });
+
+    test("should isSuccess is true,  statusCode = 404, and message 'category not found'", async () => {
+      mockCategoryResult.getCategoryById = jest.fn().mockReturnValue(null)
+      categoryUC = new CategoryUseCase(mockCategoryResult, mockProductResult);
+      let res = await categoryUC.deleteCategoryById(1);
+
+      expect(res.isSuccess).toBeFalsy();
+      expect(res.statusCode).toEqual(404);
+      expect(res.reason).toEqual('category not found');
+    });
+  });
 });
