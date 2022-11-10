@@ -1,6 +1,7 @@
 class CategoryUseCase {
-  constructor(categoryRepository) {
+  constructor(categoryRepository, productRepository) {
     this._categoryRepository = categoryRepository;
+    this._productRepository = productRepository;
   }
 
   async addCategory(name) {
@@ -73,6 +74,43 @@ class CategoryUseCase {
     result.isSuccess = true;
     result.statusCode = 200;
     result.data = updateCategory;
+
+    return result;
+  }
+
+  async getCategoryById(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const filter = {
+      where: {
+        category_id: id,
+      },
+    };
+
+    const categoryById = await this._categoryRepository.getCategoryById(id);
+
+    if (categoryById === null) {
+      result.statusCode = 404;
+      result.reason = 'category not found';
+      return result;
+    }
+
+    const products = await this._productRepository.getListProduct(filter);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = {
+      id: categoryById.id,
+      name: categoryById.name,
+      createdAt: categoryById.createdAt,
+      updatedAt: categoryById.updatedAt,
+      products,
+    };
 
     return result;
   }
