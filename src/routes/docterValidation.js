@@ -5,6 +5,6 @@ const router = express.Router();
 const mediahandler = require('../libs/mediaHandler');
 const { authorized } = require('../middleware/authorization');
 
-router.post('/validation', authorized, mediahandler.uploadFile.single('urlDoc'), docterValidationController.addDoctorValidation);
+router.post('/doctor', authorized, mediahandler.uploadFile.single('urlDoc'), docterValidationController.addDoctorValidation);
 
 module.exports = router;

@@ -1,7 +1,15 @@
 class DoctorUseCase {
-  constructor(doctorValidationRepository, userRepositoryRepository, _) {
+  constructor(
+    doctorValidationRepository,
+    userRepository,
+    medicalSpecialistRepository,
+    availableScheduleRepository,
+    _,
+  ) {
     this._doctorValidationRepository = doctorValidationRepository;
-    this._userRepositoryRepository = userRepositoryRepository;
+    this._userRepository = userRepository;
+    this._medicalSpecialistRepository = medicalSpecialistRepository;
+    this._availableScheduleRepository = availableScheduleRepository;
     this._ = _;
   }
 
@@ -12,7 +20,7 @@ class DoctorUseCase {
       reason: null,
       data: [],
     };
-    const doctorList = await this._userRepositoryRepository.getUserByDoctorRole(
+    const doctorList = await this._userRepository.getUserByDoctorRole(
       roleDoctor,
     );
     result.isSuccess = true;
@@ -28,7 +36,7 @@ class DoctorUseCase {
       reason: null,
       data: null,
     };
-    const verifyDoctor = await this._userRepositoryRepository.getUserById(id);
+    const verifyDoctor = await this._userRepository.getUserById(id);
     if (verifyDoctor === null) {
       result.statusCode = 404;
       result.reason = 'user not found';
@@ -39,9 +47,33 @@ class DoctorUseCase {
       result.reason = 'user is not doctor';
       return result;
     }
+    const doctorValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(
+      verifyDoctor.id,
+    );
+    const completeDoctorValidation = await this._.find(doctorValidation, [
+      'status',
+      'COMPLETED',
+    ]);
+    const medicalSpecialist = await this._medicalSpecialistRepository.getMedicalSpecialistById(
+      completeDoctorValidation.medicalSpecialistId,
+    );
+    const schedule = await this._availableScheduleRepository.getAllAvailableScheduleByDoctorValidationId(completeDoctorValidation.id);
+    const doctor = {
+      id: verifyDoctor.id,
+      username: verifyDoctor.username,
+      firstName: verifyDoctor.firstName,
+      lastName: verifyDoctor.lastName,
+      email: verifyDoctor.email,
+      phone: verifyDoctor.phone,
+      medicalSpecialistId: medicalSpecialist.id,
+      specialistName: medicalSpecialist.dataValues.specialistName,
+      roleId: verifyDoctor.roleId,
+      availableSchedule: schedule,
+    };
+
     result.isSuccess = true;
     result.statusCode = 200;
-    result.data = verifyDoctor;
+    result.data = doctor;
     return result;
   }
 }

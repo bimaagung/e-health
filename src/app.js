@@ -50,7 +50,7 @@ const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt,
 const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), new UserRepository(), mediaHandler, validationStatus);
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), new DayRepository(), _);
-const doctorUC = new DoctorUseCase(new AvailableScheduleRepository(), new UserRepository(), _);
+const doctorUC = new DoctorUseCase(new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), _);
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 
 app.use(cors());

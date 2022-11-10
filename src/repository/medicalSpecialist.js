@@ -15,6 +15,16 @@ class MedicalSpecialistRepository {
     return result;
   }
 
+  async getDoctorByMedicalSpecialistId(id) {
+    const result = await this._medicalSpecialistModel.findAll(
+      {
+        where: { id },
+      },
+    );
+
+    return result;
+  }
+
   async getMedicalSpecialistById(id) {
     const result = await this._medicalSpecialistModel.findOne(
       {
