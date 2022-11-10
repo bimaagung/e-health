@@ -5,12 +5,7 @@ class CategoryUseCase {
   }
 
   async addCategory(category) {
-    let result = {
-      isSuccess: false,
-      statusCode: null,
-      reason: null,
-      data: null,
-    };
+    
 
     const categoryValues = {
       name: category.name.toUpperCase(),

@@ -29,9 +29,14 @@ class UserRepository {
     const result = await this._userModel.update(update, { where: { id } });
     return result;
   }
-  
+
   async getUserById(id) {
     const result = await this._userModel.findOne({ where: { id } });
+    return result;
+  }
+
+  async getUserByDoctorRole() {
+    const result = await this._userModel.findAll({ where: { roleId: 2 } });
     return result;
   }
 }
