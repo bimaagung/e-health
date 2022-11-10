@@ -114,6 +114,28 @@ class CategoryUseCase {
 
     return result;
   }
+
+  async deleteCategoryById(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+    };
+
+    const categoryById = await this._categoryRepository.getCategoryById(id);
+
+    if (categoryById === null) {
+      result.statusCode = 404;
+      result.reason = 'category not found';
+      return result;
+    }
+
+    await this._categoryRepository.deleteCategory(id);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    return result;
+  }
 }
 
 module.exports = CategoryUseCase;
