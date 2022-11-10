@@ -8,6 +8,7 @@ const router = express.Router();
 const { authorized, admin } = require('../middleware/authorization');
 const categoryValidator = require('../middleware/validator/category');
 const productValidator = require('../middleware/validator/product');
+const medicalSpecialistValidator = require('../middleware/validator/medicalSpecialist');
 const mediaHandler = require('../libs/mediaHandler');
 
 // category
@@ -23,8 +24,8 @@ router.patch('/approve/validation/:id', authorized, admin, approveValidationCont
 router.patch('/reject/validation/:id', authorized, admin, approveValidationController.rejectedValidation);
 
 // medical Specialist
-router.post('/medical-specialist/add', authorized, admin, medicalSpecialistController.addMedicalSpecialist);
-router.put('/medical-specialist/update/:id', authorized, admin, medicalSpecialistController.updateMedicalSpecialist);
+router.post('/medical-specialist/add', authorized, admin, medicalSpecialistValidator.validatorMedicalSpecialist, medicalSpecialistController.addMedicalSpecialist);
+router.put('/medical-specialist/update/:id', authorized, admin, medicalSpecialistValidator.validatorMedicalSpecialist, medicalSpecialistController.updateMedicalSpecialist);
 router.delete('/medical-specialist/delete/:id', authorized, admin, medicalSpecialistController.deleteMedicalSpecialist);
 
 module.exports = router;
