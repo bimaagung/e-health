@@ -86,7 +86,7 @@ describe("category test", () => {
       expect(res.data.products[0]).toHaveProperty('name');
       expect(res.data.products[0]).toHaveProperty('price');
       expect(res.data.products[0]).toHaveProperty('isStrip');
-      expect(res.data.products[0]).toHaveProperty('segementation');
+      expect(res.data.products[0]).toHaveProperty('segmentation');
       expect(res.data.products[0]).toHaveProperty('urlImage');
     });
 
