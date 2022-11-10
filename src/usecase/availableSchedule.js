@@ -1,7 +1,8 @@
 class AviableDateUseCase {
-  constructor(availableSchedulRepository, doctorValidationRepository, _) {
+  constructor(availableSchedulRepository, doctorValidationRepository, dayRepository, _) {
     this._availableSchedulRepository = availableSchedulRepository;
     this._doctorValidationRepository = doctorValidationRepository;
+    this._dayRepository = dayRepository;
     this._ = _;
   }
 
@@ -49,4 +50,5 @@ class AviableDateUseCase {
     return result;
   }
 }
+
 module.exports = AviableDateUseCase;
