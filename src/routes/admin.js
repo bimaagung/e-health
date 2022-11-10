@@ -19,8 +19,8 @@ router.post('/product/add', authorized, admin, mediaHandler.uploadFile.single('u
 
 // approve validation
 router.get('/pending/validation/docter', authorized, admin, approveValidationController.getListPendingDocterValidation);
-router.patch('/approve/docter/:id', authorized, admin, approveValidationController.approvedValidation);
-router.patch('/reject/docter/:id', authorized, admin, approveValidationController.rejectedValidation);
+router.patch('/approve/validation/:id', authorized, admin, approveValidationController.approvedValidation);
+router.patch('/reject/validation/:id', authorized, admin, approveValidationController.rejectedValidation);
 
 // medical Specialist
 router.post('/medical-specialist/add', authorized, admin, medicalSpecialistController.addMedicalSpecialist);
