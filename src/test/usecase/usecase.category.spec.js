@@ -74,7 +74,7 @@ describe("category test", () => {
       let res = await categoryUC.getCategoryById(1);
 
       expect(mockCategoryResult.getCategoryById).toHaveBeenCalled();
-      //expect(mockProductResult.getListProduct).toHaveBeenCalled();
+      expect(mockProductResult.getListProduct).toHaveBeenCalled();
       expect(res.isSuccess).toBeTruthy();
       expect(res.statusCode).toEqual(200);
       expect(typeof res.data === 'object').toBeTruthy();
