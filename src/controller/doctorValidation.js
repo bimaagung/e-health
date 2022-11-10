@@ -5,6 +5,7 @@ module.exports = {
     try {
       const validation = {
         doctorId: req.user.id,
+        medicalSpecialistId: req.body.medicalSpecialistId,
         file: req.file,
         status: req.body.status,
         adminId: null,

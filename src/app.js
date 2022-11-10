@@ -21,6 +21,7 @@ const DoctorValidationUseCase = require('./usecase/doctorValidation');
 const ApprovedValidationUseCase = require('./usecase/apporvedValidation');
 const AvailableScheduleUseCase = require('./usecase/availableSchedule');
 const DoctorUseCase = require('./usecase/doctor');
+const MedicalSpecialistUseCase = require('./usecase/medicalSpecialist');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -31,6 +32,7 @@ const DoctorValidationRepository = require('./repository/doctorValidation');
 const AvailableScheduleRepository = require('./repository/availableSchedule');
 const DayRepository = require('./repository/day');
 const ProductRepository = require('./repository/product');
+const MedicalSpecialistRepository = require('./repository/medicalSpecialist');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -40,6 +42,7 @@ const authRouter = require('./routes/auth');
 const doctorValidationRouter = require('./routes/docterValidation');
 const availableScheduleRouter = require('./routes/availableSchedule');
 const doctorRouter = require('./routes/doctor');
+const medicalSpecialistRouter = require('./routes/medicalSpecialist');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepository());
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
@@ -48,6 +51,7 @@ const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepos
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), new DayRepository(), _);
 const doctorUC = new DoctorUseCase(new AvailableScheduleRepository(), new UserRepository(), _);
+const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 
 app.use(cors());
 app.use(express.json());
@@ -61,6 +65,7 @@ app.use((req, res, next) => {
   req.approvedValidationUC = approvedValidationUC;
   req.availableScheduleUC = availableScheduleUC;
   req.doctorUC = doctorUC;
+  req.medicalSpecialistUC = medicalSpecialistUC;
   next();
 });
 
@@ -72,9 +77,10 @@ app.use('/api/admin', adminRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/otp', otpRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/doctor', doctorValidationRouter);
+app.use('/api/validation', doctorValidationRouter);
 app.use('/api/schedule', availableScheduleRouter);
 app.use('/api/doctor', doctorRouter);
+app.use('/api/specialist', medicalSpecialistRouter);
 
 app.use(serverError);
 
