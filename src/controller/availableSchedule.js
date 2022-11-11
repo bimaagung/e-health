@@ -4,7 +4,7 @@ module.exports = {
   addAvailableSchedule: async (req, res, next) => {
     try {
       const schedule = {
-        docterValidationId: req.body.docterValidationId,
+        doctorValidationId: req.body.doctorValidationId,
         doctorId: req.user.id,
         dayNameId: req.body.dayNameId,
         time: null,

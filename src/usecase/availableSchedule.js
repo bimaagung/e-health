@@ -1,19 +1,18 @@
 class AviableDateUseCase {
-  constructor(availableSchedulRepository, doctorValidationRepository, dayRepository, _) {
+  constructor(availableSchedulRepository, doctorValidationRepository, _) {
     this._availableSchedulRepository = availableSchedulRepository;
     this._doctorValidationRepository = doctorValidationRepository;
-    this._dayRepository = dayRepository;
     this._ = _;
   }
 
-  async getAllAvailableScheduleByDoctorId(docterId) {
+  async getAllAvailableScheduleByDoctorId(doctorId) {
     let result = {
       isSuccess: false,
       statusCode: null,
       reason: null,
       data: [],
     };
-    const verifyDoctorValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(docterId);
+    const verifyDoctorValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(doctorId);
     const completeDoctorValidation = await this._.find(verifyDoctorValidation, ['status', 'COMPLETED']);
 
     const scheduleList = await this._availableSchedulRepository.getAllAvailableScheduleByDoctorValidationId(completeDoctorValidation.id);
