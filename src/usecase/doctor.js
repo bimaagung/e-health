@@ -45,27 +45,35 @@ class DoctorUseCase {
       result.reason = 'Doctor not found';
       return result;
     }
+    const user = await this._userRepository.getUserById(id);
+    const availableSchedule = await this._availableScheduleRepository.getAllScheduleByDoctorId(id);
+    const hospital = await this._hospitalRepository.getHospitalById(
+      verifyDoctor.hospitalId,
+    );
+    const medicalSpecialist = await this._medicalSpecialistRepository.getMedicalSpecialistById(verifyDoctor.medicalSpecialistId);
+    const docterValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(id);
 
-    const schedule = await this._availableScheduleRepository.getAllAvailableScheduleByDoctorIdd(id);
-    const hospital = await this._
-    const doctor = {
+    const doctorValue = {
       id: verifyDoctor.id,
-      username: verifyDoctor.username,
-      firstName: verifyDoctor.firstName,
-      lastName: verifyDoctor.lastName,
-      email: verifyDoctor.email,
-      phone: verifyDoctor.phone,
-      medicalSpecialistId: medicalSpecialist.id,
-      specialistName: medicalSpecialist.dataValues.specialistName,
-      roleId: verifyDoctor.roleId,
+      medicalSpecialistId: verifyDoctor.medicalSpecialistId,
+      doctorValidationId: verifyDoctor.doctorValidationId,
+      hospitalId: verifyDoctor.hospitalId,
       createdAt: verifyDoctor.createdAt,
       updatedAt: verifyDoctor.updatedAt,
-      availableSchedule: schedule,
+      detail: [
+        {
+          user,
+          medicalSpecialist,
+          docterValidation,
+          hospital,
+          availableSchedule,
+        },
+      ],
     };
 
     result.isSuccess = true;
     result.statusCode = 200;
-    result.data = doctor;
+    result.data = doctorValue;
     return result;
   }
 }

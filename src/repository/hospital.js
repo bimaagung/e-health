@@ -5,7 +5,7 @@ class hospitalRepository {
     this._hospitalModel = Hospital;
   }
 
-  async gethospitalById(id) {
+  async getHospitalById(id) {
     const result = await this._hospitalModel.findOne({
       where: { id },
     });
