@@ -6,7 +6,8 @@ module.exports = {
       const schedule = {
         doctorId: req.user.id,
         dayNameId: req.body.dayNameId,
-        time: null,
+        time: new Date(),
+        newTime: req.body.newTime,
       };
 
       const result = await req.availableScheduleUC.addAvailableSchedule(schedule);

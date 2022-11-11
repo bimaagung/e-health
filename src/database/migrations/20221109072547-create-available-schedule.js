@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       time: {
-        type: Sequelize.TIME
+        type: Sequelize.DATE
       },
       doctorValidationId: {
         type: Sequelize.INTEGER
