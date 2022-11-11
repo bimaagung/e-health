@@ -1,10 +1,10 @@
 const AviableScheduleUseCase = require("../../usecase/availableSchedule");
 const aviableScheduleUseMock = require("../mock/aviableSchedule.mock");
 const doctorValidationMock = require("../mock/docterValidation.mock");
-const _ = require("loadsh");
+const has = require('lodash');
 
 let mockAvailableScheduleReturn,
-  mockDoctorValidationReturn, mockHasReturn = {};
+  mockDoctorValidationReturn = {};
 let avilableScheduleUC = null;
 
 describe("available schedule test", () => {
@@ -23,9 +23,10 @@ describe("available schedule test", () => {
         .fn()
         .mockReturnValue(doctorValidationMock.doctorValidation),
     };
+    
     mockHasReturn = {
-        _: jest.unmock('lodash'),
-      };
+      has: jest.mock('lodash')
+    }
 
     avilableScheduleUC = new AviableScheduleUseCase(
       mockAvailableScheduleReturn,
@@ -44,6 +45,14 @@ describe("available schedule test", () => {
       updatedAt: "2022-09-07 09:36:08.000 +0700",
     };
     test("should isSuccess = true, statusCode = 200, and data is true", async () => {
+      mockDoctorValidationReturn.getAllAvailableScheduleByDoctorValidationId = jest.fn().mockReturnValue({
+        id:10,
+        status: 'COMPLETED',
+        adminId: 1,
+        createdAt: '2022-09-07 09:36:06.000 +0700',
+        updatedAt: '2022-09-07 09:36:08.000 +0700'
+      })
+      avilableScheduleUC = new AviableScheduleUseCase(mockAvailableScheduleReturn, mockDoctorValidationReturn, mockHasReturn)
       let res = await avilableScheduleUC.addAvailableSchedule(aviableSchedule);
 
       expect(res.reason).toEqual('');
