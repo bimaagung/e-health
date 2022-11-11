@@ -2,7 +2,6 @@ require("dotenv").config();
 const DoctorValidationUseCase = require('../../usecase/doctorValidation')
 const mockDoctorValidation = require('../mock/docterValidation.mock')
 const validationStatus = require('../../internal/constant/doctorValidation')
-const func = require('../../libs/function')
 
 let mockDoctorValidationReturn, mediaHandler = {};
 let doctorValidationUC = null;
@@ -17,8 +16,8 @@ describe('doctor validaton test', ()=>{
         mediaHandler = {
             cloudinaryUpload: jest.fn().mockReturnValue(true)
         }
-        mediaHandler = {
-            cloudinaryUpload: jest.fn().mockReturnValue(true)
+        func = {
+            verifyPdf: jest.fn().mockReturnValue('pdf')
         }
        
         doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationReturn, mediaHandler, validationStatus, func) 
