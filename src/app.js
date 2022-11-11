@@ -34,6 +34,7 @@ const AvailableScheduleRepository = require('./repository/availableSchedule');
 const DayRepository = require('./repository/day');
 const ProductRepository = require('./repository/product');
 const MedicalSpecialistRepository = require('./repository/medicalSpecialist');
+const DoctorRepository = require('./repository/doctor');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -49,7 +50,7 @@ const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepo
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
 const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), mediaHandler, validationStatus);
-const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
+const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), new DoctorRepository(), validationStatus, _);
 const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), _);
 const doctorUC = new DoctorUseCase(new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), _);

@@ -9,6 +9,7 @@ module.exports = {
         urlDoc: null,
         status: req.body.status,
         adminId: null,
+        hospitalId: req.body.hospitalId,
       };
 
       const { file } = req;
