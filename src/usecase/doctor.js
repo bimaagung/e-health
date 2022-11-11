@@ -1,63 +1,53 @@
 class DoctorUseCase {
   constructor(
+    doctorRepository,
     doctorValidationRepository,
     userRepository,
     medicalSpecialistRepository,
     availableScheduleRepository,
+    hospitalRepository,
     _,
   ) {
+    this._doctorRepository = doctorRepository;
     this._doctorValidationRepository = doctorValidationRepository;
     this._userRepository = userRepository;
     this._medicalSpecialistRepository = medicalSpecialistRepository;
     this._availableScheduleRepository = availableScheduleRepository;
+    this._hospitalRepository = hospitalRepository;
     this._ = _;
   }
 
-  async getAllDoctor(roleDoctor) {
+  async getAllDoctor() {
     let result = {
       isSuccess: false,
       statusCode: null,
       reason: null,
       data: [],
     };
-    const doctorList = await this._userRepository.getUserByDoctorRole(
-      roleDoctor,
-    );
+    const doctorList = await this._doctorRepository.getListDoctor();
+
     result.isSuccess = true;
     result.statusCode = 200;
     result.data = doctorList;
     return result;
   }
 
-  async getDoctorByUserId(id) {
+  async getDoctorById(id) {
     let result = {
       isSuccess: false,
       statusCode: null,
       reason: null,
       data: null,
     };
-    const verifyDoctor = await this._userRepository.getUserById(id);
+    const verifyDoctor = await this._doctorRepository.getDoctorById(id);
     if (verifyDoctor === null) {
       result.statusCode = 404;
-      result.reason = 'user not found';
+      result.reason = 'Doctor not found';
       return result;
     }
-    if (verifyDoctor.roleId !== 2) {
-      result.statusCode = 400;
-      result.reason = 'user is not doctor';
-      return result;
-    }
-    const doctorValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(
-      verifyDoctor.id,
-    );
-    const completeDoctorValidation = await this._.find(doctorValidation, [
-      'status',
-      'COMPLETED',
-    ]);
-    const medicalSpecialist = await this._medicalSpecialistRepository.getMedicalSpecialistById(
-      completeDoctorValidation.medicalSpecialistId,
-    );
-    const schedule = await this._availableScheduleRepository.getAllAvailableScheduleByDoctorValidationId(completeDoctorValidation.id);
+
+    const schedule = await this._availableScheduleRepository.getAllAvailableScheduleByDoctorIdd(id);
+    const hospital = await this._
     const doctor = {
       id: verifyDoctor.id,
       username: verifyDoctor.username,

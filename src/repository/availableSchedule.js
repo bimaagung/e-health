@@ -12,6 +12,13 @@ class AviableDateRepository {
     return result;
   }
 
+  async getAllAvailableScheduleByDoctorId(doctorId) {
+    const result = await this._availableScheduleModel.findAll({
+      where: { doctorId },
+    });
+    return result;
+  }
+
   async addAvailableSchedule(schedule) {
     const result = await this._availableScheduleModel.create(schedule);
     return result;

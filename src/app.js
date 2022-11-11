@@ -53,7 +53,7 @@ const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepos
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), new DoctorRepository(), validationStatus, _);
 const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), _);
-const doctorUC = new DoctorUseCase(new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), _);
+const doctorUC = new DoctorUseCase(new DoctorRepository(), new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), _);
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 
 app.use(cors());

@@ -14,10 +14,10 @@ module.exports = {
       next(error);
     }
   },
-  getDoctorByUserId: async (req, res, next) => {
+  getDoctorById: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const result = await req.doctorUC.getDoctorByUserId(id);
+      const result = await req.doctorUC.getDoctorById(id);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));
