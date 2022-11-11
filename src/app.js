@@ -7,6 +7,7 @@ const _ = require('lodash');
 const mediaHandler = require('./libs/mediaHandler');
 const serverError = require('./middleware/serverError');
 const tokenManager = require('./helper/tokenManager');
+const func = require('./libs/function')
 
 const app = express();
 
@@ -50,7 +51,7 @@ const medicalSpecialistRouter = require('./routes/medicalSpecialist');
 const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepository());
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
-const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), mediaHandler, validationStatus);
+const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), mediaHandler, validationStatus, func);
 const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), new DoctorRepository(), validationStatus, _);
 const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
 const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorRepository());
