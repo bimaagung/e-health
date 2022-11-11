@@ -5,9 +5,9 @@ class AviableDateRepository {
     this._availableScheduleModel = AvailableSchedule;
   }
 
-  async getAllAvailableScheduleByDoctorValidationId(doctorValidationId) {
+  async getAllScheduleByDoctorId(doctorId) {
     const result = await this._availableScheduleModel.findAll({
-      where: { doctorValidationId },
+      where: { doctorId },
     });
     return result;
   }

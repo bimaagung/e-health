@@ -4,10 +4,10 @@ module.exports = {
   addAvailableSchedule: async (req, res, next) => {
     try {
       const schedule = {
-        docterValidationId: req.body.docterValidationId,
         doctorId: req.user.id,
         dayNameId: req.body.dayNameId,
         time: null,
+        // newTime: req.body.newTime,
       };
 
       const result = await req.availableScheduleUC.addAvailableSchedule(schedule);

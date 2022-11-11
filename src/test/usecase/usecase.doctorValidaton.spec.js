@@ -16,8 +16,11 @@ describe('doctor validaton test', ()=>{
         mediaHandler = {
             cloudinaryUpload: jest.fn().mockReturnValue(true)
         }
+        func = {
+            verifyPdf: jest.fn().mockReturnValue('pdf')
+        }
        
-        doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationReturn, mediaHandler, validationStatus) 
+        doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationReturn, mediaHandler, validationStatus, func) 
     })
     describe('add docter validation test', ()=>{
         let validation = {
@@ -31,7 +34,7 @@ describe('doctor validaton test', ()=>{
         }
         test('should isSuccess = true, statusCode 201, and data is true',async () => { 
             mockDoctorValidationReturn.getDoctorValdationByUserId = jest.fn().mockReturnValue(null);
-            doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationReturn, mediaHandler, validationStatus);
+            doctorValidationUC = new DoctorValidationUseCase(mockDoctorValidationReturn, mediaHandler, validationStatus, func);
 
             let res = await doctorValidationUC.addDoctorValidation(validation, { path:'C:/doc.pdf' })
             expect(res.isSuccess).toEqual(true);

@@ -7,6 +7,7 @@ const _ = require('lodash');
 const mediaHandler = require('./libs/mediaHandler');
 const serverError = require('./middleware/serverError');
 const tokenManager = require('./helper/tokenManager');
+const func = require('./libs/function')
 
 const app = express();
 
@@ -34,6 +35,8 @@ const AvailableScheduleRepository = require('./repository/availableSchedule');
 const DayRepository = require('./repository/day');
 const ProductRepository = require('./repository/product');
 const MedicalSpecialistRepository = require('./repository/medicalSpecialist');
+const DoctorRepository = require('./repository/doctor');
+const HospitalRepository = require('./repository/hospital');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -48,11 +51,11 @@ const medicalSpecialistRouter = require('./routes/medicalSpecialist');
 const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepository());
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
 const authUC = new AuthseCase(new UserRepository(), new OTPRepository(), bcrypt, tokenManager, mediaHandler);
-const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), mediaHandler, validationStatus);
-const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), validationStatus, _);
+const doctorValidationUC = new DoctorValidationUseCase(new DoctorValidationRepository(), mediaHandler, validationStatus, func);
+const approvedValidationUC = new ApprovedValidationUseCase(new DoctorValidationRepository(), new UserRepository(), new DoctorRepository(), validationStatus, _);
 const productUC = new ProductUseCase(new ProductRepository(), new CategoryRepository(), mediaHandler);
-const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorValidationRepository(), new DayRepository(), _);
-const doctorUC = new DoctorUseCase(new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), _);
+const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRepository(), new DoctorRepository());
+const doctorUC = new DoctorUseCase(new DoctorRepository(), new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), new HospitalRepository(), _);
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 
 app.use(cors());
