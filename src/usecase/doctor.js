@@ -6,7 +6,6 @@ class DoctorUseCase {
     medicalSpecialistRepository,
     availableScheduleRepository,
     hospitalRepository,
-    _,
   ) {
     this._doctorRepository = doctorRepository;
     this._doctorValidationRepository = doctorValidationRepository;
@@ -14,7 +13,6 @@ class DoctorUseCase {
     this._medicalSpecialistRepository = medicalSpecialistRepository;
     this._availableScheduleRepository = availableScheduleRepository;
     this._hospitalRepository = hospitalRepository;
-    this._ = _;
   }
 
   async getAllDoctor() {

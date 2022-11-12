@@ -8,23 +8,23 @@ class OrderUseCase {
     this._has = has;
   }
 
-  async createOrUpdateOrder(orderData) {
+  async createOrUpdateOrder(userId, items) {
     let result = {
       isSuccess: true,
       statusCode: 200,
       reason: null,
       data: null,
     };
-    let order = await this._orderRepository.getPendingOrderByUserId(orderData.userId);
+    let order = await this._orderRepository.getPendingOrderByUserId(userId);
     if (order === null) {
       const orderValue = {
-        userId: orderData.userId,
-        status: this.orderStatus.PENDING,
+        userId,
+        status: this._orderStatus.PENDING,
       };
-      order = await this._orderRepository.create(orderValue);
+      order = await this._orderRepository.createOrder(orderValue);
     }
-    await this.addOrderDetails(order.id, orderData.items);
-    const newOrder = await this._orderRepository.getPendingOrderByUserId(orderData.userId);
+    await this.addOrderDetails(order.id, items);
+    const newOrder = await this._orderRepository.getPendingOrderByUserId(userId);
 
     result.isSuccess = true;
     result.data = newOrder;
@@ -38,8 +38,8 @@ class OrderUseCase {
       }
       let product = await this._productRepository.getProductById(items[i].id);
       if (product !== null) {
-        let { qty } = items[i].qty;
-        let { price } = product.price;
+        let qty = items[i].qty;
+        let price = product.price;
         let totalPrice = price * qty;
         let orderDetailValue = {
           orderId,
@@ -48,6 +48,7 @@ class OrderUseCase {
           price,
           totalPrice,
         };
+
         const verifyOrderDetail = await this._orderDetailRepository.getOrderByOrderIdAndProductId(orderId, product.id);
         if (verifyOrderDetail !== null) {
           const updateOrderDetailValue = {
@@ -55,9 +56,9 @@ class OrderUseCase {
             totalPrice: price * verifyOrderDetail.qty,
           };
 
-          await this._orderDetailRepository.updateDetailOrder(orderId, updateOrderDetailValue);
+          await this._orderDetailRepository.updateOrderDetail(orderId, updateOrderDetailValue);
         } else {
-          await this.orderDetailRepository.createOrderDetail(orderDetailValue);
+          await this._orderDetailRepository.createOrderDetail(orderDetailValue);
         }
       }
     }

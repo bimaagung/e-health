@@ -28,7 +28,7 @@ describe("available schedule test", () => {
     aviableScheduleReturn = {
         getAllScheduleByDoctorId: jest
         .fn()
-        .mockReturnValue(aviableScheduleMock.aviableSchedule),
+        .mockReturnValue([aviableScheduleMock.aviableSchedule]),
     };
     hospitalReturn = {
         getHospitalById: jest

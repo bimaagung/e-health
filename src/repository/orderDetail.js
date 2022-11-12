@@ -10,6 +10,11 @@ class OrderRepository {
     return result;
   }
 
+  async updateOrderDetail(order, id) {
+    const result = await this._OrderDetailModel.update(order, { where: { id } });
+    return result;
+  }
+
   async getOrderByOrderIdAndProductId(orderId, productId) {
     const result = await this._OrderDetailModel.findOne({
       where: {
