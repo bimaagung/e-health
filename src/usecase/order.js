@@ -25,9 +25,22 @@ class OrderUseCase {
     }
     await this.addOrderDetails(order.id, items);
     const newOrder = await this._orderRepository.getPendingOrderByUserId(userId);
+    const orderDetail = await this._orderDetailRepository.getOrderDetailByOrderId(newOrder.dataValues.id);
+    const orderValue = {
+      id: newOrder.id,
+      userId: newOrder.userId,
+      status: newOrder.status,
+      totalQty: await this._has._.sumBy(orderDetail, 'qty'),
+      totalItemType: orderDetail.length,
+      grandTotal: await this._has._.sumBy(orderDetail, 'totalPrice'),
+      completeDate: newOrder.completeDate,
+      createdAt: newOrder.createdAt,
+      updateAt: newOrder.updateAt,
+      orderDetail,
+    };
 
     result.isSuccess = true;
-    result.data = newOrder;
+    result.data = orderValue;
     return result;
   }
 

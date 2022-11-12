@@ -24,6 +24,15 @@ class OrderRepository {
     });
     return result;
   }
+
+  async getOrderDetailByOrderId(orderId) {
+    const result = await this._OrderDetailModel.findAll({
+      where: {
+        orderId,
+      },
+    });
+    return result;
+  }
 }
 
 module.exports = OrderRepository;
