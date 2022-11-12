@@ -46,7 +46,7 @@ class doctorValidationUseCase {
       return result;
     }
     // check validation PENDING AND COMPLETED
-    for (let i = 0; i < validationExist.length; i++) {
+    for (let i = 0; i < validationExist.length; i += 1) {
       if (validationExist[i].status === this._validationStatus.PENDING) {
         result.statusCode = 400;
         result.reason = 'you have sent the doc, please check your email regularly for update';
