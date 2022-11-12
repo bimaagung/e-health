@@ -4,13 +4,13 @@ class ApprovedValidationUseCase {
     userRepository,
     doctorRepository,
     validationStatus,
-    _,
+    has,
   ) {
     this._doctorValidationRepository = doctorValidationRepository;
     this._userRepository = userRepository;
     this._doctorRepository = doctorRepository;
     this._validationStatus = validationStatus;
-    this._ = _;
+    this._has = has;
   }
 
   async getListPendingDoctorValidation() {
