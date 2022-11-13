@@ -6,7 +6,6 @@ class DoctorUseCase {
     medicalSpecialistRepository,
     availableScheduleRepository,
     hospitalRepository,
-    _,
   ) {
     this._doctorRepository = doctorRepository;
     this._doctorValidationRepository = doctorValidationRepository;
@@ -14,7 +13,6 @@ class DoctorUseCase {
     this._medicalSpecialistRepository = medicalSpecialistRepository;
     this._availableScheduleRepository = availableScheduleRepository;
     this._hospitalRepository = hospitalRepository;
-    this._ = _;
   }
 
   async getAllDoctor() {
@@ -45,13 +43,6 @@ class DoctorUseCase {
       result.reason = 'Doctor not found';
       return result;
     }
-    const user = await this._userRepository.getUserById(id);
-    const availableSchedule = await this._availableScheduleRepository.getAllScheduleByDoctorId(id);
-    const hospital = await this._hospitalRepository.getHospitalById(
-      verifyDoctor.hospitalId,
-    );
-    const medicalSpecialist = await this._medicalSpecialistRepository.getMedicalSpecialistById(verifyDoctor.medicalSpecialistId);
-    const docterValidation = await this._doctorValidationRepository.getDoctorValdationByUserId(id);
 
     const doctorValue = {
       id: verifyDoctor.id,
@@ -62,11 +53,11 @@ class DoctorUseCase {
       updatedAt: verifyDoctor.updatedAt,
       detail: [
         {
-          user,
-          medicalSpecialist,
-          docterValidation,
-          hospital,
-          availableSchedule,
+          user: await this._userRepository.getUserById(id),
+          medicalSpecialist: await this._medicalSpecialistRepository.getMedicalSpecialistById(verifyDoctor.medicalSpecialistId),
+          docterValidation: await this._doctorValidationRepository.getDoctorValdationByUserId(id),
+          hospital: await this._hospitalRepository.getHospitalById(verifyDoctor.hospitalId),
+          availableSchedule: await this._availableScheduleRepository.getAllScheduleByDoctorId(id),
         },
       ],
     };

@@ -10,11 +10,25 @@ class OrderRepository {
     return result;
   }
 
+  async updateOrderDetail(order, id) {
+    const result = await this._OrderDetailModel.update(order, { where: { id } });
+    return result;
+  }
+
   async getOrderByOrderIdAndProductId(orderId, productId) {
     const result = await this._OrderDetailModel.findOne({
       where: {
         orderId,
         productId,
+      },
+    });
+    return result;
+  }
+
+  async getOrderDetailByOrderId(orderId) {
+    const result = await this._OrderDetailModel.findAll({
+      where: {
+        orderId,
       },
     });
     return result;
