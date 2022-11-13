@@ -23,7 +23,7 @@ class OrderUseCase {
       };
       order = await this._orderRepository.createOrder(orderValue);
     }
-    await this.addOrderDetails(order.id, items);
+    await this.addOrDeleteOrderDetails(order.id, items);
     const newOrder = await this._orderRepository.getPendingOrderByUserId(userId);
     const orderDetail = await this._orderDetailRepository.getOrderDetailByOrderId(newOrder.dataValues.id);
     const orderValue = {
@@ -44,7 +44,7 @@ class OrderUseCase {
     return result;
   }
 
-  async addOrderDetails(orderId, items) {
+  async addOrDeleteOrderDetails(orderId, items) {
     for (let i = 0; i < items.length; i += 1) {
       if (items[i].qty <= 0) {
         continue;
@@ -65,11 +65,11 @@ class OrderUseCase {
         const verifyOrderDetail = await this._orderDetailRepository.getOrderByOrderIdAndProductId(orderId, product.id);
         if (verifyOrderDetail !== null) {
           const updateOrderDetailValue = {
-            qty: verifyOrderDetail.qty + qty,
-            totalPrice: price * verifyOrderDetail.qty,
+            qty,
+            totalPrice: price * qty,
           };
 
-          await this._orderDetailRepository.updateOrderDetail(orderId, updateOrderDetailValue);
+          await this._orderDetailRepository.updateOrderDetail(updateOrderDetailValue, verifyOrderDetail.id);
         } else {
           await this._orderDetailRepository.createOrderDetail(orderDetailValue);
         }
