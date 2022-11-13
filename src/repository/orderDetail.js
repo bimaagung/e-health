@@ -15,6 +15,11 @@ class OrderRepository {
     return result;
   }
 
+  async deleteOrderDetail(id) {
+    const result = await this._OrderDetailModel.destroy({ where: { id } });
+    return result;
+  }
+
   async getOrderByOrderIdAndProductId(orderId, productId) {
     const result = await this._OrderDetailModel.findOne({
       where: {

@@ -17,6 +17,20 @@ class OrderRepository {
     return result;
   }
 
+  async getOrderById(id) {
+    const result = await this._OrderModel.findOne({
+      where: { id },
+    });
+    return result;
+  }
+
+  async deleteOrder(id) {
+    const result = await this._OrderModel.destroy({
+      where: { id },
+    });
+    return result;
+  }
+
   async getPendingOrderByUserId(userId) {
     const result = await this._OrderModel.findOne({
       where: {
