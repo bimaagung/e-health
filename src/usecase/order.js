@@ -71,7 +71,6 @@ class OrderUseCase {
           if (updateOrderDetailValue.qty === 0) {
             await this._orderDetailRepository.deleteOrderDetail(verifyOrderDetail.id);
           }
-
           await this._orderDetailRepository.updateOrderDetail(updateOrderDetailValue, verifyOrderDetail.id);
         } else {
           await this._orderDetailRepository.createOrderDetail(orderDetailValue);
