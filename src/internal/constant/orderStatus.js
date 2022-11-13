@@ -3,4 +3,5 @@ module.exports = {
   COMPLETED: 'COMPLETED',
   CANCEL: 'CANCEL',
   SUMBITED: 'SUMBITED',
+  PROCESS: 'PROCESS',
 };

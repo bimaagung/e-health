@@ -134,8 +134,73 @@ class OrderUseCase {
       result.reason = 'cannot cancel order, order already On Proces';
       return result;
     }
+    if (order.status !== this._orderStatus.COMPLETED) {
+      result.statusCode = 400;
+      result.reason = 'cannot cancel order, order already On Proces';
+      return result;
+    }
     const canceledValues = {
       status: this._orderStatus.CANCELED,
+    };
+    await this._orderRepository.updateOrder(canceledValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
+
+  async canceledOrderByAdmin(orderId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(orderId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    if (order.status === this._orderStatus.PENDING) {
+      result.statusCode = 400;
+      result.reason = 'cannot cancel order, order still pending';
+      return result;
+    }
+    if (order.status === this._orderStatus.COMPLETED) {
+      result.statusCode = 400;
+      result.reason = 'cannot cancel order, order COMPLETED';
+      return result;
+    }
+    const canceledValues = {
+      status: this._orderStatus.CANCELED,
+    };
+    await this._orderRepository.updateOrder(canceledValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
+
+  async procesOrder(orderId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(orderId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    if (order.status === this._orderStatus.COMPLETED) {
+      result.statusCode = 400;
+      result.reason = 'cannot procces order Competed';
+      return result;
+    }
+    if (order.status === this._orderStatus.CANCELED) {
+      result.statusCode = 400;
+      result.reason = 'cannot procces order, order Cancel';
+      return result;
+    }
+    const canceledValues = {
+      status: this._orderStatus.PROCESS,
     };
     await this._orderRepository.updateOrder(canceledValues, order.id);
     result.isSuccess = true;
