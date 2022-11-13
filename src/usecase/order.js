@@ -57,7 +57,7 @@ class OrderUseCase {
 
           await this._orderDetailRepository.updateDetailOrder(orderId, updateOrderDetailValue);
         } else {
-          await this.orderDetailRepository.createOrderDetail(orderDetailValue);
+          await this._orderDetailRepository.createOrderDetail(orderDetailValue);
         }
       }
     }
