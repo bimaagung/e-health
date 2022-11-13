@@ -97,6 +97,51 @@ class OrderUseCase {
       }
     }
   }
+
+  async sumbitedOrder(userId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(userId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    const sumbitedValues = {
+      status: this._orderStatus.SUMBITED,
+    };
+    await this._orderRepository.updateOrder(sumbitedValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
+
+  async canceledOrderByUser(userId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(userId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    if (order.status !== this._orderStatus.PENDING) {
+      result.statusCode = 400;
+      result.reason = 'cannot cancel order, order already On Proces';
+      return result;
+    }
+    const canceledValues = {
+      status: this._orderStatus.CANCELED,
+    };
+    await this._orderRepository.updateOrder(canceledValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
 }
 
 module.exports = OrderUseCase;
