@@ -1,14 +1,16 @@
 class ApprovedValidationUseCase {
   constructor(
     doctorValidationRepository,
-    userRepositoryRepository,
+    userRepository,
+    doctorRepository,
     validationStatus,
-    _,
+    has,
   ) {
     this._doctorValidationRepository = doctorValidationRepository;
-    this._userRepositoryRepository = userRepositoryRepository;
+    this._userRepository = userRepository;
+    this._doctorRepository = doctorRepository;
     this._validationStatus = validationStatus;
-    this._ = _;
+    this._has = has;
   }
 
   async getListPendingDoctorValidation() {
@@ -45,7 +47,7 @@ class ApprovedValidationUseCase {
       result.reason = 'Document status is not pending';
       return result;
     }
-    await this._userRepositoryRepository.updateUser(
+    await this._userRepository.updateUser(
       userValue,
       doctorValidation.doctorId,
     );
@@ -58,6 +60,13 @@ class ApprovedValidationUseCase {
       doctorValidationValue,
       id,
     );
+    const doctorValues = {
+      id: doctorValidation.doctorId,
+      medicalSpecialistId: doctorValidation.medicalSpecialistId,
+      doctorValidationId: doctorValidation.id,
+      hospitalId: doctorValidation.hospitalId,
+    };
+    await this._doctorRepository.addDoctor(doctorValues);
     result.isSuccess = true;
     result.statusCode = 200;
     return result;

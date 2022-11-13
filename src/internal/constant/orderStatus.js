@@ -1,0 +1,6 @@
+module.exports = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  CANCEL: 'CANCEL',
+  SUMBITED: 'SUMBITED',
+};

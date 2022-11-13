@@ -94,8 +94,6 @@ class MedicalSpecialistUseCase {
       return result;
     }
 
-    const doctors = await this._userRepository.getUserByDoctorRole();
-
     result.isSuccess = true;
     result.statusCode = 200;
     result.data = {
@@ -103,7 +101,7 @@ class MedicalSpecialistUseCase {
       name: medicalSpecialistById.SpecialistName,
       createdAt: medicalSpecialistById.createdAt,
       updatedAt: medicalSpecialistById.updatedAt,
-      doctors,
+      doctors: await this._userRepository.getUserByDoctorRole(),
     };
 
     return result;

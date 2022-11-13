@@ -3,10 +3,12 @@ class doctorValidationUseCase {
     doctorValidationRepository,
     mediaHanlder,
     validationStatus,
+    func,
   ) {
     this._doctorValidation = doctorValidationRepository;
     this._mediaHanlder = mediaHanlder;
     this._validationStatus = validationStatus;
+    this._func = func;
   }
 
   async addDoctorValidation(validation, file) {
@@ -26,7 +28,7 @@ class doctorValidationUseCase {
       'urlDoc',
     );
     // check file pdf
-    let verifyPdf = uploadDocument.split('.').reverse()[0];
+    let verifyPdf = await this._func.verifyPdf(uploadDocument);
     if (verifyPdf !== 'pdf') {
       result.statusCode = 400;
       result.reason = 'can only upload pdf files';
@@ -44,7 +46,7 @@ class doctorValidationUseCase {
       return result;
     }
     // check validation PENDING AND COMPLETED
-    for (let i = 0; i < validationExist.length; i++) {
+    for (let i = 0; i < validationExist.length; i += 1) {
       if (validationExist[i].status === this._validationStatus.PENDING) {
         result.statusCode = 400;
         result.reason = 'you have sent the doc, please check your email regularly for update';
