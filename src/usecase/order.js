@@ -15,7 +15,12 @@ class OrderUseCase {
       reason: null,
       data: null,
     };
+    // check user punya order dengan STATUS PENDING
+
     let order = await this._orderRepository.getPendingOrderByUserId(userId);
+
+    // Jika User tidak punya Order degan STATUS PENDING, maka user dibuatkan order dengan nilai status = PENDING
+
     if (order === null) {
       const orderValue = {
         userId,
@@ -23,7 +28,12 @@ class OrderUseCase {
       };
       order = await this._orderRepository.createOrder(orderValue);
     }
+
+    // input Detail Order atau hapus Detail Order
+
     await this.addOrDeleteOrderDetails(order.id, items);
+
+    // Ambil hasil values akhir di setelah menjalankan fungsi addOrDeleteOrderDetails
     const newOrder = await this._orderRepository.getPendingOrderByUserId(userId);
     const orderDetail = await this._orderDetailRepository.getOrderDetailByOrderId(newOrder.dataValues.id);
     const orderValue = {
@@ -63,20 +73,74 @@ class OrderUseCase {
         };
 
         const verifyOrderDetail = await this._orderDetailRepository.getOrderByOrderIdAndProductId(orderId, product.id);
+        // ambil order detail berdasakan parameter orderId dan product ID
+        if (qty === 0) {
+          if (verifyOrderDetail !== null) {
+            // check jika Input Body Qty == 0, Maka orderDetail Akan di hapus.
+            await this._orderDetailRepository.deleteOrderDetail(verifyOrderDetail.id);
+            return;
+          }
+          // check jika Input Body Qty != 0 , Maka value orderDetail akan di kembalikan.
+          return;
+        }
         if (verifyOrderDetail !== null) {
           const updateOrderDetailValue = {
             qty,
             totalPrice: price * qty,
           };
-          if (updateOrderDetailValue.qty === 0) {
-            await this._orderDetailRepository.deleteOrderDetail(verifyOrderDetail.id);
-          }
           await this._orderDetailRepository.updateOrderDetail(updateOrderDetailValue, verifyOrderDetail.id);
+        // jika input body product ID exist di order Detail, maka orderDetail akan di Update.
         } else {
           await this._orderDetailRepository.createOrderDetail(orderDetailValue);
+          // jika input body product ID tidak exist di order Detail, maka akan membuat OrderDetail baru.
         }
       }
     }
+  }
+
+  async sumbitedOrder(userId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(userId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    const sumbitedValues = {
+      status: this._orderStatus.SUMBITED,
+    };
+    await this._orderRepository.updateOrder(sumbitedValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
+
+  async canceledOrderByUser(userId) {
+    let result = {
+      isSuccess: false,
+      statusCode: 404,
+      reason: null,
+    };
+    const order = await this._orderRepository.getOderByUserId(userId);
+    if (order === null) {
+      result.reason = 'order not found';
+      return result;
+    }
+    if (order.status !== this._orderStatus.PENDING) {
+      result.statusCode = 400;
+      result.reason = 'cannot cancel order, order already On Proces';
+      return result;
+    }
+    const canceledValues = {
+      status: this._orderStatus.CANCELED,
+    };
+    await this._orderRepository.updateOrder(canceledValues, order.id);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
   }
 }
 
