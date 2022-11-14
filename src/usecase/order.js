@@ -118,21 +118,20 @@ class OrderUseCase {
     return result;
   }
 
-  async processOrder(userId) {
+  async processOrder(orderId) {
     let result = {
       isSuccess: false,
       statusCode: 404,
       reason: null,
     };
-    const order = await this._orderRepository.getOrderByUserId(userId);
-    if (order === null) {
-      result.reason = 'order not found';
-      return result;
-    }
-    if (order.status === this._orderStatus.CANCELED || order.status === this._orderStatus.COMPLETED) {
-      result.statusCode = 400;
-      result.reason = 'cannot process order, order already Completed or Cancel';
-      return result;
+    const order = await this._orderRepository.getOrderById(orderId);
+    const statusValues = ['PROCCESS', 'COMPLETED', 'SUMBITED', 'CANCELED'];
+    for (let i = 0; i < statusValues.length; i += 1) {
+      if (order.status === statusValues[i]) {
+        result.statusCode = 400;
+        result.reason = `cannot cancel order, status order ${statusValues[i]}`;
+        return result;
+      }
     }
     const statusValue = {
       status: this._orderStatus.PROCESS,
@@ -151,23 +150,22 @@ class OrderUseCase {
       reason: null,
     };
     const order = await this._orderRepository.getOrderById(id);
-    console.log(order)
-    const verifyOrder = await this._has.find(order, { id });
-    console.log(verifyOrder);
+    if (userId !== order.userId) {
+      result.reason = 'Order not found!';
+      return result;
+    }
     const statusValues = ['PENDING', 'COMPLETED', 'PROCESS', 'CANCELED'];
     for (let i = 0; i < statusValues.length; i += 1) {
       if (order.status === statusValues[i]) {
-      //  console.log(order.status)
-      //  console.log(statusValues[i])
         result.statusCode = 400;
         result.reason = `cannot cancel order, status order ${statusValues[i]}`;
         return result;
       }
     }
-    // const statusValue = {
-    //   status: this._orderStatus.CANCELED,
-    // };
-    // await this._orderRepository.updateOrder(statusValue, order.id);
+    const statusVal = {
+      status: this._orderStatus.CANCELED,
+    };
+    await this._orderRepository.updateOrder(statusVal, order.id);
     result.isSuccess = true;
     result.status = 200;
     return result;
@@ -179,26 +177,23 @@ class OrderUseCase {
       statusCode: 404,
       reason: null,
     };
-    const order = await this._orderRepository.getOrderByUserId(orderId);
+    const order = await this._orderRepository.getOrderById(orderId);
     if (order === null) {
-      result.reason = 'order not found';
+      result.reason = 'Order not found!';
       return result;
     }
-    if (order.status !== this._orderStatus.PENDING) {
-      result.statusCode = 400;
-      result.reason = 'cannot cancel order, Order stil pending';
-      return result;
+    const statusValues = ['PENDING', 'COMPLETED', 'SUMBITED', 'CANCELED'];
+    for (let i = 0; i < statusValues.length; i += 1) {
+      if (order.status === statusValues[i]) {
+        result.statusCode = 400;
+        result.reason = `cannot cancel order, status order ${statusValues[i]}`;
+        return result;
+      }
     }
-    if (order.status !== this._orderStatus.COMPLETED) {
-      result.statusCode = 400;
-      result.reason = 'cannot cancel order, Order Completed';
-      return result;
-    }
-    const statusValue = {
+    const statusVal = {
       status: this._orderStatus.CANCELED,
     };
-    await this.updateStock(order.id, statusValue);
-    await this._orderRepository.updateOrder(statusValue, orderId);
+    await this._orderRepository.updateOrder(statusVal, order.id);
     result.isSuccess = true;
     result.status = 200;
     return result;
@@ -210,20 +205,18 @@ class OrderUseCase {
       statusCode: 404,
       reason: null,
     };
-    const order = await this._orderRepository.getOrderByUserId(orderId);
+    const order = await this._orderRepository.getOrderById(orderId);
     if (order === null) {
       result.reason = 'order not found';
       return result;
     }
-    if (order.status !== this._orderStatus.PENDING) {
-      result.statusCode = 400;
-      result.reason = 'cannot Completed order, Order stil pending';
-      return result;
-    }
-    if (order.status !== this._orderStatus.COMPLETED) {
-      result.statusCode = 400;
-      result.reason = 'Order Completed';
-      return result;
+    const statusValues = ['PENDING', 'COMPLETED', 'SUMBITED', 'CANCELED'];
+    for (let i = 0; i < statusValues.length; i += 1) {
+      if (order.status === statusValues[i]) {
+        result.statusCode = 400;
+        result.reason = `cannot cancel order, status order ${statusValues[i]}`;
+        return result;
+      }
     }
     const statusValue = {
       status: this._orderStatus.COMPLETED,
