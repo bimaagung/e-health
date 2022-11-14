@@ -98,13 +98,13 @@ class OrderUseCase {
     }
   }
 
-  async sumbitedOrder(userId) {
+  async sumbitedOrder(orderId) {
     let result = {
       isSuccess: false,
       statusCode: 404,
       reason: null,
     };
-    const order = await this._orderRepository.getPendingOrderByUserId(userId);
+    const order = await this._orderRepository.getPendingOrderByUserId(orderId);
     if (order === null) {
       result.reason = 'order not found';
       return result;
@@ -112,6 +112,7 @@ class OrderUseCase {
     const sumbitedValues = {
       status: this._orderStatus.SUMBITED,
     };
+    await this.updateStock(order.id, sumbitedValues.status);
     await this._orderRepository.updateOrder(sumbitedValues, order.id);
     result.isSuccess = true;
     result.status = 200;
@@ -125,7 +126,7 @@ class OrderUseCase {
       reason: null,
     };
     const order = await this._orderRepository.getOrderById(orderId);
-    const statusValues = ['PROCCESS', 'COMPLETED', 'SUMBITED', 'CANCELED'];
+    const statusValues = ['PROCCESS', 'COMPLETED', 'PENDING', 'CANCELED'];
     for (let i = 0; i < statusValues.length; i += 1) {
       if (order.status === statusValues[i]) {
         result.statusCode = 400;
@@ -165,6 +166,7 @@ class OrderUseCase {
     const statusVal = {
       status: this._orderStatus.CANCELED,
     };
+    await this.updateStock(order.id, statusVal.status);
     await this._orderRepository.updateOrder(statusVal, order.id);
     result.isSuccess = true;
     result.status = 200;
@@ -193,6 +195,7 @@ class OrderUseCase {
     const statusVal = {
       status: this._orderStatus.CANCELED,
     };
+    await this.updateStock(order.id, statusVal.status);
     await this._orderRepository.updateOrder(statusVal, order.id);
     result.isSuccess = true;
     result.status = 200;
@@ -229,19 +232,19 @@ class OrderUseCase {
   }
 
   async updateStock(orderId, status) {
-    const order = await this._orderRepository.getOrderById(orderId);
+    const order = await this._orderDetailRepository.getOrderDetailByOrderId(orderId);
     for (let i = 0; i < order.length; i += 1) {
-      const product = await this._productRepository.getProductById(order[i].productId);
-      if (status === this._orderStatus.PROCESS) {
-        const updateValue = {
-          stock: product.qty - order[i].qty,
+      let product = await this._productRepository.getProductById(order[i].productId);
+      if (status === this._orderStatus.SUMBITED) {
+        const sumbitedUpdateValue = {
+          stock: product.stock - order[i].qty,
         };
-        await this._productRepository.update(order[i].productId, updateValue);
-      } else if (status === this.orderStatus.CANCELED) {
-        const updateValue = {
-          stock: product.qty + order[i].qty,
+        await this._productRepository.updateProduct(sumbitedUpdateValue, product.id);
+      } else if (status === this._orderStatus.CANCELED) {
+        const canceleUpdateValue = {
+          stock: product.stock + order[i].qty,
         };
-        await this._productRepository.update(order[i].productId, updateValue);
+        await this._productRepository.updateProduct(canceleUpdateValue, product.id);
       }
     }
   }

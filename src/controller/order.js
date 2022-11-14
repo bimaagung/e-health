@@ -32,8 +32,8 @@ module.exports = {
   },
   processOrder: async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const result = await req.orderUC.processOrder(userId);
+      const { id } = req.params;
+      const result = await req.orderUC.processOrder(id);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));
@@ -61,8 +61,8 @@ module.exports = {
   },
   canceledOrderByAdmin: async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const result = await req.orderUC.canceledOrderByAdmin(userId);
+      const { id } = req.params;
+      const result = await req.orderUC.canceledOrderByAdmin(id);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));
@@ -75,8 +75,8 @@ module.exports = {
   },
   completedOrder: async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const result = await req.orderUC.completedOrder(userId);
+      const { id } = req.params;
+      const result = await req.orderUC.completedOrder(id);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));

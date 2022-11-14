@@ -35,8 +35,8 @@ class ProductRepository {
     return result;
   }
 
-  async updateProduct(id, product) {
-    const result = await this._productModel.findOne(
+  async updateProduct(product, id) {
+    const result = await this._productModel.update(
       product,
       {
         where: { id },
