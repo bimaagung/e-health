@@ -150,40 +150,24 @@ class OrderUseCase {
       statusCode: 404,
       reason: null,
     };
-    const getOne = await this._orderRepository.getOrderById(id)
-    const order = await this._orderRepository.getAllOrderByUserId(userId);
-    const verifyOrder = await this._has.find(order, {id:id});
-    console.log(verifyOrder)
-    // for (let i = 0; i < order.length; i += 1) {
-    //   if (order[i].id !== getOne.id) {
-    //     result.reason = 'order not found!';
-    //     return result;
-    //   }
-    // }
-    // if (order === null) {
-    //   result.reason = 'order not found';
-    //   return result;
-    // }
+    const order = await this._orderRepository.getOrderById(id);
+    console.log(order)
+    const verifyOrder = await this._has.find(order, { id });
+    console.log(verifyOrder);
     const statusValues = ['PENDING', 'COMPLETED', 'PROCESS', 'CANCELED'];
-    // console.log('ini ada')
-    // console.log('ini ada')
-    // console.log('ini ada')
-    // console.log('ini ada')
-    // console.log('ini ada')
-    // console.log('ini ada')
     for (let i = 0; i < statusValues.length; i += 1) {
       if (order.status === statusValues[i]) {
-       console.log(order.status)
-       console.log(statusValues[i])
+      //  console.log(order.status)
+      //  console.log(statusValues[i])
         result.statusCode = 400;
         result.reason = `cannot cancel order, status order ${statusValues[i]}`;
         return result;
       }
     }
-    const statusValue = {
-      status: this._orderStatus.CANCELED,
-    };
-    await this._orderRepository.updateOrder(statusValue, order.id);
+    // const statusValue = {
+    //   status: this._orderStatus.CANCELED,
+    // };
+    // await this._orderRepository.updateOrder(statusValue, order.id);
     result.isSuccess = true;
     result.status = 200;
     return result;
@@ -223,13 +207,50 @@ class OrderUseCase {
   async completedOrder(orderId) {
     let result = {
       isSuccess: false,
+      statusCode: 404,
+      reason: null,
     };
+    const order = await this._orderRepository.getOrderByUserId(orderId);
     if (order === null) {
       result.reason = 'order not found';
       return result;
     }
-    if (order.status === this._orderStatus.COMPLETED) {
+    if (order.status !== this._orderStatus.PENDING) {
       result.statusCode = 400;
+      result.reason = 'cannot Completed order, Order stil pending';
+      return result;
+    }
+    if (order.status !== this._orderStatus.COMPLETED) {
+      result.statusCode = 400;
+      result.reason = 'Order Completed';
+      return result;
+    }
+    const statusValue = {
+      status: this._orderStatus.COMPLETED,
+      completeDate: new Date(),
+    };
+    await this._orderRepository.updateOrder(statusValue, orderId);
+    result.isSuccess = true;
+    result.status = 200;
+    return result;
+  }
+
+  async updateStock(orderId, status) {
+    const order = await this._orderRepository.getOrderById(orderId);
+    for (let i = 0; i < order.length; i += 1) {
+      const product = await this._productRepository.getProductById(order[i].productId);
+      if (status === this._orderStatus.PROCESS) {
+        const updateValue = {
+          stock: product.qty - order[i].qty,
+        };
+        await this._productRepository.update(order[i].productId, updateValue);
+      } else if (status === this.orderStatus.CANCELED) {
+        const updateValue = {
+          stock: product.qty + order[i].qty,
+        };
+        await this._productRepository.update(order[i].productId, updateValue);
+      }
+    }
   }
 }
 
