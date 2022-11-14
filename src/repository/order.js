@@ -10,9 +10,30 @@ class OrderRepository {
     return result;
   }
 
-  async getOrderByUserId(userId) {
-    const result = await this._OrderModel.findOne({
+  async getAllOrderByUserId(userId) {
+    const result = await this._OrderModel.findAll({
       where: { userId },
+    });
+    return result;
+  }
+
+  async getOrderById(id) {
+    const result = await this._OrderModel.findOne({
+      where: { id },
+    });
+    return result;
+  }
+
+  async updateOrder(order, id) {
+    const result = await this._OrderModel.update(order, {
+      where: { id },
+    });
+    return result;
+  }
+
+  async deleteOrder(id) {
+    const result = await this._OrderModel.destroy({
+      where: { id },
     });
     return result;
   }

@@ -3,6 +3,7 @@ const categoryController = require('../controller/category');
 const productController = require('../controller/product');
 const approveValidationController = require('../controller/approvedValidation');
 const medicalSpecialistController = require('../controller/medicalSpecialist');
+const orderController = require('../controller/order');
 
 const router = express.Router();
 const { authorized, admin } = require('../middleware/authorization');
@@ -28,4 +29,8 @@ router.post('/medical-specialist/add', authorized, admin, medicalSpecialistValid
 router.put('/medical-specialist/update/:id', authorized, admin, medicalSpecialistValidator.validatorMedicalSpecialist, medicalSpecialistController.updateMedicalSpecialist);
 router.delete('/medical-specialist/delete/:id', authorized, admin, medicalSpecialistController.deleteMedicalSpecialist);
 
+// Order
+router.patch('/order-process/:id', authorized, admin, orderController.processOrder);
+router.patch('/order-complete/:id', authorized, admin, orderController.completedOrder);
+router.patch('/order-canceled/:id', authorized, admin, orderController.canceledOrderByAdmin);
 module.exports = router;

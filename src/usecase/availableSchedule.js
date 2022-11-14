@@ -25,9 +25,6 @@ class AviableDateUseCase {
       reason: null,
       data: null,
     };
-    // let newTime = availableSchedule.time.toString().split(' ');
-    // console.log(newTime[4]);
-    // availableSchedule.time = availableSchedule.newTime;
 
     const schedule = await this._availableSchedulRepository.addAvailableSchedule(availableSchedule);
     result.isSuccess = true;
