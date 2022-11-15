@@ -111,12 +111,9 @@ describe('product test', () => {
      });
 
      describe('updateProduct test', () => { 
-        beforeEach(() => {
-            
-        });
 
         test("should isSuccess = true,statusCode = 200", async () => {
-            let res = await productUC.updateProduct(id, product, { path:'C:/Image.jpg' });
+            let res = await productUC.updateProduct(1, product, { path:'C:/Image.jpg' });
 
             expect(mockProductReturn.getProductById).toHaveBeenCalled();
             expect(mockCategoryReturn.getCategoryById).toHaveBeenCalled();

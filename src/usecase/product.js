@@ -42,6 +42,48 @@ class ProductUseCase {
 
     return result;
   }
+
+  async updateProduct(id, product, file) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    product.name = product.name.toUpperCase();
+
+    const productId = await this._productRepository.getProductById(id);
+
+    if (productId === null) {
+      result.isSuccess = false;
+      result.statusCode = 404;
+      result.reason = 'product not found';
+      return result;
+    }
+
+    const categoryId = await this._categoryRepository.getCategoryById(product.categoryId);
+
+    if (categoryId === null) {
+      result.isSuccess = false;
+      result.statusCode = 404;
+      result.reason = 'category not found';
+      return result;
+    }
+
+    if (file !== undefined) {
+      const urlImage = await this._mediaHandler.cloudinaryUpload(file.path, 'product');
+      product.urlImage = urlImage;
+    } else {
+      delete product.urlImage;
+    }
+
+    await this._productRepository.updateProduct(product, id);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    return result;
+  }
 }
 
 module.exports = ProductUseCase;
