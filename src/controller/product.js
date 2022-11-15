@@ -36,6 +36,36 @@ module.exports = {
     }
   },
 
+  getListProduct: async (req, res, next) => {
+    try {
+      const result = await req.productUC.getListProduct();
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  getProductById: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const result = await req.productUC.getProductById(id);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success(result.data));
+    } catch (error) {
+      next(error);
+    }
+  },
+
   updateProduct: async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -61,6 +91,22 @@ module.exports = {
       const { file } = req;
 
       const result = await req.productUC.updateProduct(id, product, file);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success());
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  deleteProduct: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const result = await req.productUC.deleteProduct(id);
 
       if (!result.isSuccess) {
         return res.status(result.statusCode).json(resData.failed(result.reason));

@@ -43,6 +43,49 @@ class ProductUseCase {
     return result;
   }
 
+  async getListProduct() {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      data: [],
+    };
+
+    const filter = {
+      where: {},
+    };
+
+    const products = await this._productRepository.getListProduct(filter);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = products;
+
+    return result;
+  }
+
+  async getProductById(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const productId = await this._productRepository.getProductById(id);
+
+    if (productId === null) {
+      result.isSuccess = false;
+      result.statusCode = 404;
+      result.reason = 'product not found';
+      return result;
+    }
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    result.data = productId;
+    return result;
+  }
+
   async updateProduct(id, product, file) {
     let result = {
       isSuccess: false,
@@ -79,6 +122,30 @@ class ProductUseCase {
     }
 
     await this._productRepository.updateProduct(product, id);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+    return result;
+  }
+
+  async deleteProduct(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const productId = await this._productRepository.getProductById(id);
+
+    if (productId === null) {
+      result.isSuccess = false;
+      result.statusCode = 404;
+      result.reason = 'product not found';
+      return result;
+    }
+
+    await this._productRepository.deleteProduct(id);
 
     result.isSuccess = true;
     result.statusCode = 200;

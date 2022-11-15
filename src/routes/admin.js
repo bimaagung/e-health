@@ -19,6 +19,7 @@ router.delete('/category/delete/:id', authorized, admin, categoryController.dele
 // product
 router.post('/product/add', authorized, admin, mediaHandler.uploadFile.single('urlImage'), productValidator.validatorProduct, productController.addProduct);
 router.put('/product/update/:id', authorized, admin, mediaHandler.uploadFile.single('urlImage'), productValidator.validatorUpdateProduct, productController.updateProduct);
+router.delete('/product/delete/:id', authorized, admin, productController.deleteProduct);
 
 // approve validation
 router.get('/pending/validation/docter', authorized, admin, approveValidationController.getListPendingDocterValidation);
