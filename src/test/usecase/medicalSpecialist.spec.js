@@ -10,19 +10,19 @@ describe("approve validation test", () => {
   beforeEach(() => {
     mockMedicalSpecialistReturn = {
       addMedicalSpecialist: jest
-        .fn()
+        .fn(medicalSpecialistMock.medicalSpecialist)
         .mockReturnValue(medicalSpecialistMock.medicalSpecialist),
-      getListMedicalSpecialist: jest
-        .fn()
+        getListMedicalSpecialist: jest
+        .fn([medicalSpecialistMock.medicalSpecialist])
         .mockReturnValue(medicalSpecialistMock.medicalSpecialist),
       getDoctorByMedicalSpecialistId: jest
-        .fn()
+        .fn(medicalSpecialistMock.medicalSpecialist)
         .mockReturnValue(medicalSpecialistMock.medicalSpecialist),
       getMedicalSpecialistById: jest
-        .fn()
+        .fn(medicalSpecialistMock.medicalSpecialist)
         .mockReturnValue(medicalSpecialistMock.medicalSpecialist),
       getMedicalSpecialistByName: jest
-        .fn()
+        .fn(medicalSpecialistMock.medicalSpecialist)
         .mockReturnValue(medicalSpecialistMock.medicalSpecialist),
       updateMedicalSpecialist: jest.fn().mockReturnValue(true),
       deleteMedicalSpecialist: jest.fn().mockReturnValue(true),
@@ -61,16 +61,58 @@ describe("approve validation test", () => {
       expect(res.isSuccess).toBeFalsy();
       expect(res.statusCode).toEqual(400);
       expect(res.reason).toEqual("specialist name already exists");
+
     });
   });
+
+
+
+
+
+
   describe("getList medical specialist test", () => {
+    const list=  [
+      {
+        id: 1,
+        specialistName: 'BISUL',
+        createdAt: '2022-09-07 09:36:06.000 +0700',
+        updatedAt: '2022-09-07 09:36:08.000 +0700'
+   },
+   {
+    id: 2,
+        specialistName: 'T',
+        createdAt: '2022-09-07 09:36:06.000 +0700',
+        updatedAt: '2022-09-07 09:36:08.000 +0700'
+   }
+  ]
+    
+    
     test("should isSuccess = true, statusCode = 200, and type data is array", async () => {
-      let res = await medicalSpecialistUC.getListMedicalSpecialist();
+      
+
+
+      mockMedicalSpecialistReturn.getListMedicalSpecialist = jest.fn().mockReturnValue(list)
+      medicalSpecialistUC = new MedicalSpecialisUseCase(mockMedicalSpecialistReturn,
+        mockUserReturn)
+      let res = await medicalSpecialistUC.getListMedicalSpecialist([medicalSpecialistMock.medicalSpecialist]);
+      console.log(res)
 
       expect(res.isSuccess).toBeTruthy();
+      expect(typeof res.data === 'object').toBeTruthy();
+      expect(Array.isArray(res.data)).toBeTruthy();
+      expect(res.data[0]).toHaveProperty("id");
+      expect(res.data[0]).toHaveProperty("specialistName");
+      
       expect(res.statusCode).toEqual(200);
     });
   });
+
+
+
+
+
+
+
 
   describe("get doctor by medical specialist test", () => {
     test("should isSuccess = true, statusCode = 200, and type data is valid", async () => {
