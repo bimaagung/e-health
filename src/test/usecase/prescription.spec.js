@@ -7,6 +7,7 @@ let mockPrescriptionReturn,
     mockOrderReturn,
     mockUserReturn,
     mediaHandler = {};
+
 let prescriptionUC = null;
 
 describe("Prescription Test", () => {
@@ -60,15 +61,17 @@ describe("Prescription Test", () => {
     });
     describe("Create Precription", () => {
         test("should isSuccess = true, statusCode = 200, and data is true", async () => {
+           mockOrderReturn.getPendingOrderByUserId = jest.fn().mockReturnValue(orderMock.order)
             prescriptionUC = new PrescriptionUseCase(
                 mockPrescriptionReturn,
                 mockOrderReturn,
                 mockUserReturn,
                 mediaHandler
             );
-            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription);
+            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription,  {path:'C:/Image.jpg' });
+            console.log(res)
             expect(res.isSuccess).toBeTruthy();
-            expect(res.statusCode).toEqual(200);
+            expect(res.statusCode).toEqual(201);
             expect(typeof res.data === "object").toBeTruthy();
             expect(res.data).toHaveProperty("id");
             expect(res.data).toHaveProperty("urlPrescription");
@@ -79,10 +82,28 @@ describe("Prescription Test", () => {
 
         test("should isSuccess = false, statusCode = 404, and order not found", async () => {
             mockOrderReturn.getPendingOrderByUserId = jest.fn().mockReturnValue(null)
-            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription);
+            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription, {path:'C:/Image.jpg' });
             expect(res.isSuccess).toBeFalsy();
             expect(res.statusCode).toEqual(404);
             expect(res.reason).toEqual('order not found');
+            
+        });
+
+        test("should isSuccess = false, statusCode = 404, and user not found", async () => {
+            mockUserReturn.getUserById = jest.fn().mockReturnValue(null)
+            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription, {path:'C:/Image.jpg' });
+            expect(res.isSuccess).toBeFalsy();
+            expect(res.statusCode).toEqual(404);
+            expect(res.reason).toEqual('user not found');
+            
+        });
+
+        test("should isSuccess = false, statusCode = 404, plese insert document", async () => {
+
+            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription, undefined);
+            expect(res.isSuccess).toBeFalsy();
+            expect(res.statusCode).toEqual(400);
+            expect(res.reason).toEqual('please insert Prescription');
             
         });
     });

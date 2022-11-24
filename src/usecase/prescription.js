@@ -1,8 +1,8 @@
 class PrescriptionUseCase {
-  constructor(prescriptionRepository, userRepository, orderRepository, mediaHandler) {
+  constructor(prescriptionRepository, orderRepository, userRepository, mediaHandler) {
     this._prescriptionRepositroy = prescriptionRepository;
-    this._userRepository = userRepository;
     this._orderRepository = orderRepository;
+    this._userRepository = userRepository;
     this._mediaHandler = mediaHandler;
   }
 
@@ -40,7 +40,7 @@ class PrescriptionUseCase {
       result.reason = 'user not found';
       return result;
     }
-    const pendingOrder = await this._orderRepository.getPendingOrderByUserId(user.id);
+    const pendingOrder = await this._orderRepository.getPendingOrderByUserId(prescription.id);
     if (pendingOrder === null) {
       result.reason = 'order not found';
       return result;
@@ -56,13 +56,14 @@ class PrescriptionUseCase {
     );
     const prescriptionValue = {
       urlPresciption: uploadPrescription,
-      userId: user.id,
+      userId: prescription.userId,
       orderId: pendingOrder.id,
     };
     const newPrescription = await this._prescriptionRepositroy.addPrescription(prescriptionValue);
     result.isSuccess = true;
     result.statusCode = 201;
     result.data = newPrescription;
+    return result
   }
 }
 
