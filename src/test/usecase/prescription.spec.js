@@ -60,6 +60,12 @@ describe("Prescription Test", () => {
     });
     describe("Create Precription", () => {
         test("should isSuccess = true, statusCode = 200, and data is true", async () => {
+            prescriptionUC = new PrescriptionUseCase(
+                mockPrescriptionReturn,
+                mockOrderReturn,
+                mockUserReturn,
+                mediaHandler
+            );
             let res = await prescriptionUC.addPrescription(prescriptionMock.prescription);
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(200);
@@ -73,7 +79,7 @@ describe("Prescription Test", () => {
 
         test("should isSuccess = false, statusCode = 404, and order not found", async () => {
             mockOrderReturn.getPendingOrderByUserId = jest.fn().mockReturnValue(null)
-            let res = await prescriptionUC.getPrescriptionById(1);
+            let res = await prescriptionUC.addPrescription(prescriptionMock.prescription);
             expect(res.isSuccess).toBeFalsy();
             expect(res.statusCode).toEqual(404);
             expect(res.reason).toEqual('order not found');

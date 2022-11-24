@@ -26,6 +26,7 @@ const ProductUseCase = require('./usecase/product');
 const DoctorUseCase = require('./usecase/doctor');
 const MedicalSpecialistUseCase = require('./usecase/medicalSpecialist');
 const OrderUseCase = require('./usecase/order');
+const PrescriptionUseCase = require('./usecase/prescription');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -41,6 +42,7 @@ const DoctorRepository = require('./repository/doctor');
 const HospitalRepository = require('./repository/hospital');
 const OrderRepository = require('./repository/order');
 const OrderDetailRepository = require('./repository/orderDetail');
+const PrescriptionRepository = require('./repository/prescription');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -64,6 +66,7 @@ const availableScheduleUC = new AvailableScheduleUseCase(new AvailableScheduleRe
 const doctorUC = new DoctorUseCase(new DoctorRepository(), new DoctorValidationRepository(), new UserRepository(), new MedicalSpecialistRepository(), new AvailableScheduleRepository(), new HospitalRepository(), has);
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 const orderUC = new OrderUseCase(new OrderRepository(), new OrderDetailRepository(), new UserRepository(), new ProductRepository(), orderStatus, has);
+const prescriptionUC = new PrescriptionUseCase(new PrescriptionRepository(), new OrderRepository(), new UserRepository(), mediaHandler);
 
 app.use(cors());
 app.use(express.json());
@@ -80,6 +83,7 @@ app.use((req, res, next) => {
   req.doctorUC = doctorUC;
   req.medicalSpecialistUC = medicalSpecialistUC;
   req.orderUC = orderUC;
+  req.prescriptionUC = prescriptionUC;
   next();
 });
 
