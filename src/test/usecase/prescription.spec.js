@@ -23,6 +23,7 @@ describe("Prescription Test", () => {
         };
         mockOrderReturn = {
             getPendingOrderByUserId: jest.fn().mockReturnValue(orderMock.order),
+            updateOrder: jest.fn().mockReturnValue(true),
         };
         mockUserReturn = {
             getUserById: jest.fn().mockReturnValue(userMock.user),
@@ -61,7 +62,6 @@ describe("Prescription Test", () => {
     });
     describe("Create Precription", () => {
         test("should isSuccess = true, statusCode = 200, and data is true", async () => {
-           mockOrderReturn.getPendingOrderByUserId = jest.fn().mockReturnValue(orderMock.order)
             prescriptionUC = new PrescriptionUseCase(
                 mockPrescriptionReturn,
                 mockOrderReturn,
@@ -69,7 +69,6 @@ describe("Prescription Test", () => {
                 mediaHandler
             );
             let res = await prescriptionUC.addPrescription(prescriptionMock.prescription,  {path:'C:/Image.jpg' });
-            console.log(res)
             expect(res.isSuccess).toBeTruthy();
             expect(res.statusCode).toEqual(201);
             expect(typeof res.data === "object").toBeTruthy();

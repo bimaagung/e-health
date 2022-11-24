@@ -60,10 +60,16 @@ class PrescriptionUseCase {
       orderId: pendingOrder.id,
     };
     const newPrescription = await this._prescriptionRepositroy.addPrescription(prescriptionValue);
+    const updateOrderValue = {
+      prescriptionId: newPrescription.id,
+    };
+
+    await this._orderRepository.updateOrder(updateOrderValue, pendingOrder.id);
+
     result.isSuccess = true;
     result.statusCode = 201;
     result.data = newPrescription;
-    return result
+    return result;
   }
 }
 
