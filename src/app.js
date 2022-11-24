@@ -55,6 +55,7 @@ const doctorRouter = require('./routes/doctor');
 const medicalSpecialistRouter = require('./routes/medicalSpecialist');
 const orderRouter = require('./routes/order');
 const productRouter = require('./routes/product');
+const prescriptionRouter = require('./routes/prescription');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepository());
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
@@ -101,6 +102,7 @@ app.use('/api/doctor', doctorRouter);
 app.use('/api/specialist', medicalSpecialistRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/product', productRouter);
+app.use('/api/prescription', prescriptionRouter);
 
 app.use(serverError);
 
