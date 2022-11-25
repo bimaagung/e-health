@@ -14,6 +14,11 @@ class PharmacyProductRepository {
     const result = await this._pharmacyProductModel.findOne({ where: { productId } });
     return result;
   }
+
+  async updatePharmacyProduct(id, product) {
+    const result = await this._pharmacyProductModel.update(product, { where: { productId: id } });
+    return result;
+  }
 }
 
 module.exports = PharmacyProductRepository;
