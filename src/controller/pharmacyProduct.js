@@ -42,4 +42,20 @@ module.exports = {
       next(error);
     }
   },
+
+  deletePharmacyProduct: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const result = await req.pharmacyProductUC.deletePharmacyProduct(id);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success());
+    } catch (error) {
+      next(error);
+    }
+  },
 };
