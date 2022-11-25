@@ -27,6 +27,7 @@ const DoctorUseCase = require('./usecase/doctor');
 const MedicalSpecialistUseCase = require('./usecase/medicalSpecialist');
 const OrderUseCase = require('./usecase/order');
 const PrescriptionUseCase = require('./usecase/prescription');
+const PharmacyProductUseCase = require('./usecase/pharmacyProduct');
 
 // Repository
 const CategoryRepository = require('./repository/category');
@@ -43,6 +44,7 @@ const HospitalRepository = require('./repository/hospital');
 const OrderRepository = require('./repository/order');
 const OrderDetailRepository = require('./repository/orderDetail');
 const PrescriptionRepository = require('./repository/prescription');
+const PharmacyProductRepository = require('./repository/pharmacyProduct');
 
 // Router
 const adminRouter = require('./routes/admin');
@@ -56,6 +58,7 @@ const medicalSpecialistRouter = require('./routes/medicalSpecialist');
 const orderRouter = require('./routes/order');
 const productRouter = require('./routes/product');
 const prescriptionRouter = require('./routes/prescription');
+const pharmacyRouter = require('./routes/pharmacy');
 
 const categoryUC = new CategoryUseCase(new CategoryRepository(), new ProductRepository());
 const otpUC = new OTPUseCase(new OTPRepository(), new EmailRepository(), typeOtp);
@@ -68,6 +71,7 @@ const doctorUC = new DoctorUseCase(new DoctorRepository(), new DoctorValidationR
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 const orderUC = new OrderUseCase(new OrderRepository(), new OrderDetailRepository(), new UserRepository(), new ProductRepository(), orderStatus, has);
 const prescriptionUC = new PrescriptionUseCase(new PrescriptionRepository(), new OrderRepository(), new UserRepository(), mediaHandler);
+const pharmacyProductUC = new PharmacyProductUseCase(new PharmacyProductRepository());
 
 app.use(cors());
 app.use(express.json());
@@ -85,6 +89,7 @@ app.use((req, res, next) => {
   req.medicalSpecialistUC = medicalSpecialistUC;
   req.orderUC = orderUC;
   req.prescriptionUC = prescriptionUC;
+  req.pharmacyProductUC = pharmacyProductUC;
   next();
 });
 
@@ -103,6 +108,7 @@ app.use('/api/specialist', medicalSpecialistRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/product', productRouter);
 app.use('/api/prescription', prescriptionRouter);
+app.use('/api/pharmacy', pharmacyRouter);
 
 app.use(serverError);
 
