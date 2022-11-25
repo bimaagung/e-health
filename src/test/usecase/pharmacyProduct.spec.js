@@ -1,7 +1,8 @@
 const PharmacyProductUseCase =  require('../../usecase/pharmacyProduct')
 const mockPharmacyProduct = require('../mock/pharmacyProduct.mock')
+const mockProduct = require('../mock/product.mock')
 
-let mockPharmacyProductReturn = {};
+let mockPharmacyProductReturn, mockProductReturn = {};
 let pharmacyProductUC = null;
 
 describe('pharmacy product test', () => { 
@@ -11,7 +12,11 @@ describe('pharmacy product test', () => {
             getPharmacyProductByProductId : jest.fn().mockReturnValue(mockPharmacyProduct.pharmacyProduct)
         }
 
-        pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn);
+        mockProductReturn = {
+            getProductById: jest.fn().mockReturnValue(mockProduct.product),
+        }
+
+        pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn, mockProductReturn);
     });
 
     const product = {
@@ -25,16 +30,18 @@ describe('pharmacy product test', () => {
     describe('addPharmacyProduct test ', () => {
           /*
             Add Product Pharmacy
-            1. should success is true, statusCode 200
-            2. should success is false, statusCode 400, reason 'product is already exists'  
+            1. should isSuccess is true, statusCode 200
+            2. should isSuccess is false, statusCode 400, reason 'product is already exists'  
+            3. when productId not found should isSuccess is false, statusCode 404, reason 'product not found'  
         */
         
         test("should success is true, statusCode 200", async () => {
             mockPharmacyProductReturn.getPharmacyProductByProductId = jest.fn().mockReturnValue(null)
-            pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn);
+            pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn, mockProductReturn);
 
             let res = await pharmacyProductUC.addPharmacyProduct(product)
 
+            expect(mockProductReturn.getProductById).toHaveBeenCalled();
             expect(mockPharmacyProductReturn.getPharmacyProductByProductId).toHaveBeenCalled();
             expect(mockPharmacyProductReturn.addPharmacyProduct).toHaveBeenCalled();
 
@@ -43,14 +50,29 @@ describe('pharmacy product test', () => {
         });
 
         test("should success is false, statusCode 400, reason 'product is already exists'", async () => {
-            
             let res = await pharmacyProductUC.addPharmacyProduct(product)
 
+            expect(mockProductReturn.getProductById).toHaveBeenCalled();
             expect(mockPharmacyProductReturn.getPharmacyProductByProductId).toHaveBeenCalled();
 
             expect(res.isSuccess).toBeFalsy();
             expect(res.statusCode).toEqual(400);
             expect(res.reason).toEqual('product is already exists');
+        });
+
+        test("should success is false, statusCode 404, reason 'productId not found'", async () => {
+            
+           mockProductReturn.getProductById = jest.fn().mockReturnValue(null)
+           pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn, mockProductReturn);
+
+
+            let res = await pharmacyProductUC.addPharmacyProduct(product)
+
+            expect(mockProductReturn.getProductById).toHaveBeenCalled();
+
+            expect(res.isSuccess).toBeFalsy();
+            expect(res.statusCode).toEqual(404);
+            expect(res.reason).toEqual('productId not found');
         });
     });
  })

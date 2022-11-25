@@ -1,6 +1,7 @@
 class PharmacyProductUseCase {
-  constructor(pharmacyProductRepository) {
+  constructor(pharmacyProductRepository, productRepository) {
     this._pharmacyProductRepository = pharmacyProductRepository;
+    this._productRepository = productRepository;
   }
 
   async addPharmacyProduct(product) {
@@ -10,6 +11,15 @@ class PharmacyProductUseCase {
       reason: null,
       data: null,
     };
+
+    const productId = await this._productRepository.getProductById(product.productId);
+
+    if (productId === null) {
+      result.statusCode = 404;
+      result.isSuccess = false;
+      result.reason = 'productId not found';
+      return result;
+    }
 
     const pharmacyProduct = await this._pharmacyProductRepository.getPharmacyProductByProductId(product.productId);
 

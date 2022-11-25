@@ -71,7 +71,7 @@ const doctorUC = new DoctorUseCase(new DoctorRepository(), new DoctorValidationR
 const medicalSpecialistUC = new MedicalSpecialistUseCase(new MedicalSpecialistRepository(), new UserRepository());
 const orderUC = new OrderUseCase(new OrderRepository(), new OrderDetailRepository(), new UserRepository(), new ProductRepository(), orderStatus, has);
 const prescriptionUC = new PrescriptionUseCase(new PrescriptionRepository(), new OrderRepository(), new UserRepository(), mediaHandler);
-const pharmacyProductUC = new PharmacyProductUseCase(new PharmacyProductRepository());
+const pharmacyProductUC = new PharmacyProductUseCase(new PharmacyProductRepository(), new ProductRepository());
 
 app.use(cors());
 app.use(express.json());

@@ -16,7 +16,7 @@ module.exports = {
         return res.status(result.statusCode).json(resData.failed(result.reason));
       }
 
-      return res.status(result.statusCode).json(resData.success(result.data));
+      return res.status(result.statusCode).json(resData.success());
     } catch (error) {
       next(error);
     }
