@@ -21,4 +21,25 @@ module.exports = {
       next(error);
     }
   },
+
+  updatePharmacyProduct: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const product = {
+        price: req.body.price,
+        stock: req.body.stock,
+        pharmacyId: req.body.pharmacyId,
+      };
+
+      const result = await req.pharmacyProductUC.updatePharmacyProduct(id, product);
+
+      if (!result.isSuccess) {
+        return res.status(result.statusCode).json(resData.failed(result.reason));
+      }
+
+      return res.status(result.statusCode).json(resData.success());
+    } catch (error) {
+      next(error);
+    }
+  },
 };
