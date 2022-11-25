@@ -11,6 +11,7 @@ describe('pharmacy product test', () => {
             addPharmacyProduct : jest.fn().mockReturnValue(mockPharmacyProduct.pharmacyProduct),
             getPharmacyProductByProductId : jest.fn().mockReturnValue(mockPharmacyProduct.pharmacyProduct),
             updatePharmacyProduct : jest.fn().mockReturnValue(true),
+            deletePharmacyProduct : jest.fn().mockReturnValue(true),
         }
 
         mockProductReturn = {
@@ -76,6 +77,7 @@ describe('pharmacy product test', () => {
             expect(res.reason).toEqual('productId not found');
         });
     });
+
     describe('updatePharmacyProduct test ', () => {
           /*
             Update Product Pharmacy
@@ -106,6 +108,45 @@ describe('pharmacy product test', () => {
            pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn, mockProductReturn);
 
             let res = await pharmacyProductUC.updatePharmacyProduct(1, product)
+
+            expect(mockPharmacyProductReturn.getPharmacyProductByProductId).toHaveBeenCalled();
+
+            expect(res.isSuccess).toBeFalsy();
+            expect(res.statusCode).toEqual(404);
+            expect(res.reason).toEqual('product not found');
+        });
+    });
+
+    describe('deletePharmacyProduct test ', () => {
+          /*
+            Update Product Pharmacy
+            1. should isSuccess is true, statusCode 200
+            2. when productId not found should isSuccess is false, statusCode 404, reason 'product not found'  
+        */
+        
+        const product = {
+            price: 32000,
+            stock: 20,
+            pharmacyId:1
+        }
+
+        test("should success is true, statusCode 200", async () => {
+
+            let res = await pharmacyProductUC.deletePharmacyProduct(1)
+
+            expect(mockPharmacyProductReturn.getPharmacyProductByProductId).toHaveBeenCalled();
+            expect(mockPharmacyProductReturn.deletePharmacyProduct).toHaveBeenCalled();
+
+            expect(res.isSuccess).toBeTruthy();
+            expect(res.statusCode).toEqual(200);
+        });
+
+        test("should success is false, statusCode 404, reason 'product not found'", async () => {
+            
+           mockPharmacyProductReturn.getPharmacyProductByProductId = jest.fn().mockReturnValue(null)
+           pharmacyProductUC = new PharmacyProductUseCase(mockPharmacyProductReturn, mockProductReturn);
+
+            let res = await pharmacyProductUC.deletePharmacyProduct(1)
 
             expect(mockPharmacyProductReturn.getPharmacyProductByProductId).toHaveBeenCalled();
 

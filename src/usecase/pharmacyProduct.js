@@ -62,6 +62,31 @@ class PharmacyProductUseCase {
 
     return result;
   }
+
+  async deletePharmacyProduct(id) {
+    let result = {
+      isSuccess: false,
+      statusCode: null,
+      reason: null,
+      data: null,
+    };
+
+    const pharmacyProduct = await this._pharmacyProductRepository.getPharmacyProductByProductId(id);
+
+    if (pharmacyProduct === null) {
+      result.statusCode = 404;
+      result.isSuccess = false;
+      result.reason = 'product not found';
+      return result;
+    }
+
+    await this._pharmacyProductRepository.deletePharmacyProduct(id);
+
+    result.isSuccess = true;
+    result.statusCode = 200;
+
+    return result;
+  }
 }
 
 module.exports = PharmacyProductUseCase;

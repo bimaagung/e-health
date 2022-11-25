@@ -19,6 +19,11 @@ class PharmacyProductRepository {
     const result = await this._pharmacyProductModel.update(product, { where: { productId: id } });
     return result;
   }
+
+  async deletePharmacyProduct(productId) {
+    const result = await this._pharmacyProductModel.destroy({ where: { productId } });
+    return result;
+  }
 }
 
 module.exports = PharmacyProductRepository;
